@@ -24,9 +24,16 @@
             android:name="edu.ntust.qa_ntust.AddQuestionActivity"
             android:label="@string/add_question_activity_name" />
 
+        <activity android:name="edu.ntust.qa_ntust.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <provider
             android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
             android:authorities="edu.ntust.qa_ntust"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 </manifest>
