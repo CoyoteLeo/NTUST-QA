@@ -20,20 +20,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import edu.ntust.qa_ntust.data.TaskContract.TaskEntry;
+import edu.ntust.qa_ntust.data.QuestionContract.QuestionEntry;
 
 
-public class TaskDbHelper extends SQLiteOpenHelper {
+public class QuestionDbHelper extends SQLiteOpenHelper {
 
-    // The name of the database
-    private static final String DATABASE_NAME = "tasksDb.db";
+    private static final String DATABASE_NAME = "questionsDb.db";
 
-    // If you change the database schema, you must increment the database version
     private static final int VERSION = 1;
 
-
-    // Constructor
-    TaskDbHelper(Context context) {
+    QuestionDbHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
@@ -45,16 +41,16 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // Create tasks table (careful to follow SQL formatting rules)
-        final String CREATE_TABLE = "CREATE TABLE " + TaskEntry.TABLE_NAME + " (" +
-                TaskEntry._ID + " INTEGER PRIMARY KEY, " +
-                TaskEntry.COLUMN_CONTENT + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_CHOICE_A + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_CHOICE_B + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_CHOICE_C + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_CHOICE_D + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_ANSWER + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
-                TaskEntry.COLUMN_DIFFICULTY + " INTEGER NOT NULL " +
+        final String CREATE_TABLE = "CREATE TABLE " + QuestionEntry.TABLE_NAME + " (" +
+                QuestionEntry._ID + " INTEGER PRIMARY KEY, " +
+                QuestionEntry.COLUMN_CONTENT + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_CHOICE_A + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_CHOICE_B + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_CHOICE_C + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_CHOICE_D + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_ANSWER + " TEXT NOT NULL, " +
+                QuestionEntry.COLUMN_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
+                QuestionEntry.COLUMN_DIFFICULTY + " INTEGER NOT NULL " +
                 ");";
 
         db.execSQL(CREATE_TABLE);
@@ -67,7 +63,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TaskEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + QuestionEntry.TABLE_NAME);
         onCreate(db);
     }
 }

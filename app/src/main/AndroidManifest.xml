@@ -20,18 +20,13 @@
             </intent-filter>
         </activity>
 
-        <!-- AddTaskActivity -->
         <activity
-            android:name="edu.ntust.qa_ntust.AddTaskActivity"
-            android:label="@string/add_task_activity_name" />
+            android:name="edu.ntust.qa_ntust.AddQuestionActivity"
+            android:label="@string/add_question_activity_name" />
 
-        <!-- Register the TaskContentProvider -->
-        <!-- Set name, authorities, and exported attributes -->
-        <!-- exported = false limits access to this ContentProvider to only this app -->
         <provider
-            android:name="edu.ntust.qa_ntust.data.TaskContentProvider"
+            android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
             android:authorities="edu.ntust.qa_ntust"
-            android:exported="false" />
+            android:exported="true" />
     </application>
-
 </manifest>

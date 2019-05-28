@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This vertical linear layout contains all the views in the AddTaskActivity code.
+    This vertical linear layout contains all the views in the AddQuestionActivity code.
     This includes an EditText to add a task description, and buttons to select a priority
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,11 +16,11 @@
 
     <!-- EditText for getting task description input -->
     <EditText
-        android:id="@+id/editTextTaskDescription"
+        android:id="@+id/editTextQuestionContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:hint="@string/edit_task_description"
+        android:hint="@string/edit_question_content"
         android:paddingBottom ="@dimen/activity_horizontal_margin"/>
 
     <!-- TextView and FrameLayout (which contains buttons) for Priority Selection -->
@@ -30,7 +30,7 @@
         android:layout_gravity="start"
         android:textColor="@android:color/primary_text_light"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/priority_string"
+        android:text="@string/difficulty_string"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"/>
 
@@ -55,9 +55,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/materialRed"
-                android:text="@string/high_priority"
+                android:text="@string/high_difficulty"
                 android:layout_weight="1"
-                android:onClick="onPrioritySelected"/>
+                android:onClick="onDifficultySelected"/>
 
             <Button
                 style="?android:attr/buttonBarButtonStyle"
@@ -66,9 +66,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/materialOrange"
-                android:text="@string/med_priority"
+                android:text="@string/med_difficulty"
                 android:layout_weight="1"
-                android:onClick="onPrioritySelected"/>
+                android:onClick="onDifficultySelected"/>
 
             <Button
                 style="?android:attr/buttonBarButtonStyle"
@@ -77,9 +77,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/materialYellow"
-                android:text="@string/low_priority"
+                android:text="@string/low_difficulty"
                 android:layout_weight="1"
-                android:onClick="onPrioritySelected"/>
+                android:onClick="onDifficultySelected"/>
 
         </LinearLayout>
 
@@ -95,7 +95,7 @@
                 android:id="@+id/radButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPrioritySelected"
+                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
                 android:theme="@style/WhiteRadioButton"/>
 
@@ -103,7 +103,7 @@
                 android:id="@+id/radButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPrioritySelected"
+                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
                 android:theme="@style/WhiteRadioButton"/>
 
@@ -111,7 +111,7 @@
                 android:id="@+id/radButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPrioritySelected"
+                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
                 android:theme="@style/WhiteRadioButton"/>
 
@@ -129,6 +129,6 @@
         style="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/primary_text_dark"
         android:background="@color/colorPrimary"
-        android:onClick="onClickAddTask"/>
+        android:onClick="onClickAddQuestion"/>
 
 </LinearLayout>

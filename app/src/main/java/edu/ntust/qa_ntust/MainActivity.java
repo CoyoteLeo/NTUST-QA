@@ -15,20 +15,15 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 
-import edu.ntust.qa_ntust.AddTaskActivity;
-import edu.ntust.qa_ntust.CustomCursorAdapter;
-import edu.ntust.qa_ntust.data.TaskContract;
+import edu.ntust.qa_ntust.data.QuestionContract;
 
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-
-    // Constants for logging and referring to a unique loader
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int TASK_LOADER_ID = 0;
+    private static final int QUESTION_LOADER_ID = 0;
 
-    // Member variables for the adapter and RecyclerView
     private CustomCursorAdapter mAdapter;
     RecyclerView mRecyclerView;
 
@@ -38,14 +33,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the RecyclerView to its corresponding view
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewTasks);
-
-        // Set the layout for the RecyclerView to be a linear layout, which measures and
-        // positions items within a RecyclerView into a linear list
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewQuestions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -72,14 +61,14 @@ public class MainActivity extends AppCompatActivity implements
 
                 // Build appropriate uri with String row id appended
                 String stringId = Integer.toString(id);
-                Uri uri = TaskContract.TaskEntry.CONTENT_URI;
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
 
                 // COMPLETED (2) Delete a single row of data using a ContentResolver
                 getContentResolver().delete(uri, null, null);
 
                 // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
-                getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, MainActivity.this);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
 
             }
         }).attachToRecyclerView(mRecyclerView);
@@ -87,16 +76,15 @@ public class MainActivity extends AppCompatActivity implements
         /*
          Set the Floating Action Button (FAB) to its corresponding View.
          Attach an OnClickListener to it, so that when it's clicked, a new intent will be created
-         to launch the AddTaskActivity.
+         to launch the AddQuestionActivity.
          */
         FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create a new intent to start an AddTaskActivity
-                Intent addTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
-                startActivity(addTaskIntent);
+                Intent addQuestionIntent = new Intent(MainActivity.this, AddQuestionActivity.class);
+                startActivity(addQuestionIntent);
             }
         });
 
@@ -104,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements
          Ensure a loader is initialized and active. If the loader doesn't already exist, one is
          created, otherwise the last created loader is re-used.
          */
-        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(QUESTION_LOADER_ID, null, this);
     }
 
 
     /**
      * This method is called after this activity has been paused or restarted.
-     * Often, this is after new data has been inserted through an AddTaskActivity,
+     * Often, this is after new data has been inserted through an AddQuestionActivity,
      * so this restarts the loader to re-query the underlying data for any changes.
      */
     @Override
@@ -118,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
 
         // re-queries for all tasks
-        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+        getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
     }
 
 
@@ -134,14 +122,14 @@ public class MainActivity extends AppCompatActivity implements
         return new AsyncTaskLoader<Cursor>(this) {
 
             // Initialize a Cursor, this will hold all the task data
-            Cursor mTaskData = null;
+            Cursor mQuestionData = null;
 
             // onStartLoading() is called when a loader first starts loading data
             @Override
             protected void onStartLoading() {
-                if (mTaskData != null) {
+                if (mQuestionData != null) {
                     // Delivers any previously loaded data immediately
-                    deliverResult(mTaskData);
+                    deliverResult(mQuestionData);
                 } else {
                     // Force a new load
                     forceLoad();
@@ -157,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements
                 // [Hint] use a try/catch block to catch any errors in loading data
 
                 try {
-                    return getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
+                    return getContentResolver().query(QuestionContract.QuestionEntry.CONTENT_URI,
                             null,
                             null,
                             null,
-                            TaskContract.TaskEntry.COLUMN_DIFFICULTY);
+                            QuestionContract.QuestionEntry.COLUMN_DIFFICULTY);
 
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");
@@ -172,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements
 
             // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {
-                mTaskData = data;
+                mQuestionData = data;
                 super.deliverResult(data);
             }
         };
