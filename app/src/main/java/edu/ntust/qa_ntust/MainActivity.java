@@ -41,46 +41,27 @@ public class MainActivity extends AppCompatActivity implements
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        /*
-         Add a touch helper to the RecyclerView to recognize when a user swipes to delete an item.
-         An ItemTouchHelper enables touch behavior (like swipe and move) on each ViewHolder,
-         and uses callbacks to signal when a user is performing these actions.
-         */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
-            // Called when a user swipes left or right on a ViewHolder
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                // Here is where you'll implement swipe to delete
-
-                // COMPLETED (1) Construct the URI for the item to delete
-                //[Hint] Use getTag (from the adapter code) to get the id of the swiped item
-                // Retrieve the id of the task to delete
                 int id = (int) viewHolder.itemView.getTag();
 
-                // Build appropriate uri with String row id appended
                 String stringId = Integer.toString(id);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
 
-                // COMPLETED (2) Delete a single row of data using a ContentResolver
                 getContentResolver().delete(uri, null, null);
 
-                // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
 
             }
         }).attachToRecyclerView(mRecyclerView);
 
-        /*
-         Set the Floating Action Button (FAB) to its corresponding View.
-         Attach an OnClickListener to it, so that when it's clicked, a new intent will be created
-         to launch the AddQuestionActivity.
-         */
         FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
 
         fabButton.setOnClickListener(new View.OnClickListener() {
@@ -91,10 +72,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        /*
-         Ensure a loader is initialized and active. If the loader doesn't already exist, one is
-         created, otherwise the last created loader is re-used.
-         */
         getSupportLoaderManager().initLoader(QUESTION_LOADER_ID, null, this);
     }
 
@@ -124,35 +101,25 @@ public class MainActivity extends AppCompatActivity implements
 
         return new AsyncTaskLoader<Cursor>(this) {
 
-            // Initialize a Cursor, this will hold all the task data
             Cursor mQuestionData = null;
 
-            // onStartLoading() is called when a loader first starts loading data
             @Override
             protected void onStartLoading() {
                 if (mQuestionData != null) {
-                    // Delivers any previously loaded data immediately
                     deliverResult(mQuestionData);
                 } else {
-                    // Force a new load
                     forceLoad();
                 }
             }
 
-            // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
-                // Will implement to load data
-
-                // Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
-
                 try {
                     return getContentResolver().query(QuestionContract.QuestionEntry.CONTENT_URI,
                             null,
                             null,
                             null,
-                            QuestionContract.QuestionEntry.COLUMN_DIFFICULTY);
+                            QuestionContract.QuestionEntry.COLUMN_COUNT + " DESC");
 
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");
@@ -161,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-            // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {
                 mQuestionData = data;
                 super.deliverResult(data);
@@ -179,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update the data that the adapter uses to create ViewHolders
         mAdapter.swapCursor(data);
     }
 
