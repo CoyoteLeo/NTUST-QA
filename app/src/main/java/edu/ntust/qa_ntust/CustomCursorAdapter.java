@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package edu.ntust.qa_ntust;
 
 import android.content.Context;
@@ -35,7 +19,6 @@ import edu.ntust.qa_ntust.data.QuestionContract;
  */
 public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapter.QuestionViewHolder> {
 
-    // Class variables for the Cursor that holds task data and the Context
     private Cursor mCursor;
     private Context mContext;
 
@@ -57,7 +40,6 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      */
     @Override
     public QuestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.question_layout, parent, false);
         return new QuestionViewHolder(view);
     }
@@ -73,36 +55,35 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
     public void onBindViewHolder(QuestionViewHolder holder, int position) {
 
         int idIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry._ID);
-        int descriptionIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_CONTENT);
+        int contentIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_CONTENT);
         int difficultyIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY);
+        int countIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_COUNT);
 
-        mCursor.moveToPosition(position); // get to the right location in the cursor
+        mCursor.moveToPosition(position);
 
-        // Determine the values of the wanted data
         final int id = mCursor.getInt(idIndex);
-        String description = mCursor.getString(descriptionIndex);
+        String content = mCursor.getString(contentIndex);
         int difficulty = mCursor.getInt(difficultyIndex);
+        int count = mCursor.getInt(countIndex);
 
-        //Set values
         holder.itemView.setTag(id);
-        holder.questionDescriptionView.setText(description);
+        holder.questionContentView.setText(content);
 
-        // Programmatically set the text and color for the priority TextView
-        String difficultyString = "" + difficulty; // converts int to String
+        String difficultyString = "" + difficulty;
         holder.difficultyView.setText(difficultyString);
 
+        String countString = "" + count;
+        holder.orderView.setText(countString);
+
         GradientDrawable difficultyCircle = (GradientDrawable) holder.difficultyView.getBackground();
-        // Get the appropriate background color based on the priority
         int difficultyColor = getDifficultyColor(difficulty);
         difficultyCircle.setColor(difficultyColor);
 
+        GradientDrawable countCircle = (GradientDrawable) holder.orderView.getBackground();
+        int countColor = getCountColor(count);
+        countCircle.setColor(countColor);
     }
 
-
-    /*
-    Helper method for selecting the correct priority circle color.
-    P1 = red, P2 = orange, P3 = yellow
-    */
     private int getDifficultyColor(int difficulty) {
         int difficultyColor = 0;
 
@@ -122,6 +103,16 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         return difficultyColor;
     }
 
+    private int getCountColor(int count) {
+        if (count >= 20)
+            return ContextCompat.getColor(mContext, R.color.count1);
+        else if (count >= 10)
+            return ContextCompat.getColor(mContext, R.color.count2);
+        else if (count >= 5)
+            return ContextCompat.getColor(mContext, R.color.count3);
+        else
+            return ContextCompat.getColor(mContext, R.color.count4);
+    }
 
     /**
      * Returns the number of items to display.
@@ -140,27 +131,22 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
     public Cursor swapCursor(Cursor c) {
-        // check if this cursor is the same as the previous cursor (mCursor)
         if (mCursor == c) {
-            return null; // bc nothing has changed
+            return null;
         }
         Cursor temp = mCursor;
-        this.mCursor = c; // new cursor value assigned
-
-        //check if this is a valid cursor, then update the cursor
+        this.mCursor = c;
         if (c != null) {
             this.notifyDataSetChanged();
         }
         return temp;
     }
 
-
-    // Inner class for creating ViewHolders
     class QuestionViewHolder extends RecyclerView.ViewHolder {
 
-        // Class variables for the task description and priority TextViews
-        TextView questionDescriptionView;
+        TextView questionContentView;
         TextView difficultyView;
+        TextView orderView;
 
         /**
          * Constructor for the TaskViewHolders.
@@ -170,8 +156,9 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         public QuestionViewHolder(View itemView) {
             super(itemView);
 
-            questionDescriptionView = (TextView) itemView.findViewById(R.id.questionContent);
+            questionContentView = (TextView) itemView.findViewById(R.id.questionContent);
             difficultyView = (TextView) itemView.findViewById(R.id.difficultyTextView);
+            orderView = (TextView) itemView.findViewById(R.id.questionCount);
         }
     }
 }

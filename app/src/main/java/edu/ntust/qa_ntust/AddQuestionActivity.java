@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package edu.ntust.qa_ntust;
 
 import android.content.ContentValues;
@@ -29,8 +13,6 @@ import edu.ntust.qa_ntust.data.QuestionContract;
 
 
 public class AddQuestionActivity extends AppCompatActivity {
-
-    // Declare a member variable to keep track of a task's selected mDifficulty
     private int mDifficulty;
 
 
@@ -61,6 +43,7 @@ public class AddQuestionActivity extends AppCompatActivity {
         contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_D, input);
         contentValues.put(QuestionContract.QuestionEntry.COLUMN_ANSWER, "A");
         contentValues.put(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY, mDifficulty);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_COUNT, 5);
         Uri uri = getContentResolver().insert(QuestionContract.QuestionEntry.CONTENT_URI, contentValues);
 
         if (uri != null) {

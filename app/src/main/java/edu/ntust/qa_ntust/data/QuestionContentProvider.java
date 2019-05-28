@@ -40,15 +40,7 @@ public class QuestionContentProvider extends ContentProvider {
      * then use .addURI(String authority, String path, int match) to add matches
      */
     public static UriMatcher buildUriMatcher() {
-
-        // Initialize a UriMatcher with no matches by passing in NO_MATCH to the constructor
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        /*
-          All paths added to the UriMatcher have a corresponding int.
-          For each kind of uri you may want to access, add the corresponding match with addURI.
-          The two calls below add matches for the task directory and a single item by ID.
-         */
         uriMatcher.addURI(QuestionContract.AUTHORITY, QuestionContract.PATH_QUESTIONS, QUESTIONS);
         uriMatcher.addURI(QuestionContract.AUTHORITY, QuestionContract.PATH_QUESTIONS + "/#", QUESTION_WITH_ID);
 
@@ -110,7 +102,6 @@ public class QuestionContentProvider extends ContentProvider {
         }
 
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-
         return retCursor;
     }
 
@@ -142,8 +133,21 @@ public class QuestionContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-
-        throw new UnsupportedOperationException("Not yet implemented");
+        final SQLiteDatabase db = mQuestionDbHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int id;
+        switch (match) {
+            case QUESTIONS:
+                id = db.update(TABLE_NAME, values, selection, selectionArgs);
+                if (id <= 0) {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return id;
     }
 
 
