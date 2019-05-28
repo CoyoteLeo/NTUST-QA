@@ -1,15 +1,10 @@
 package edu.ntust.qa_ntust;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -22,12 +17,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -35,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private CustomCursorAdapter mAdapter;
     RecyclerView mRecyclerView;
+
+    private String order_column = QuestionContract.QuestionEntry.COLUMN_COUNT;
+    private String order = "DESC";
 
 
     @Override
@@ -90,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
-        // re-queries for all tasks
         getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
     }
 
@@ -125,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
                             null,
                             null,
                             null,
-                            QuestionContract.QuestionEntry.COLUMN_COUNT + " DESC");
+                            order_column + " " + order);
 
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");
@@ -167,25 +161,39 @@ public class MainActivity extends AppCompatActivity implements
         mAdapter.swapCursor(null);
     }
 
-    //  Add the menu to the menu bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
         MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our visualizer_menu layout to this menu */
-        inflater.inflate(R.menu.visualizer_menu, menu);
-        /* Return true so that the visualizer_menu is displayed in the Toolbar */
+        inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
-    //  When the "Settings" menu item is pressed, open SettingsActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            startActivity(startSettingsActivity);
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
+            case R.id.action_count_order:
+                if (order_column.equals(QuestionContract.QuestionEntry.COLUMN_COUNT))
+                    order = order.equals("DESC") ? "ASC" : "DESC";
+                else {
+                    order_column = QuestionContract.QuestionEntry.COLUMN_COUNT;
+                    order = "DESC";
+                }
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
+                return true;
+            case R.id.action_difficulty_order:
+                if (order_column.equals(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY))
+                    order = order.equals("DESC") ? "ASC" : "DESC";
+                else {
+                    order_column = QuestionContract.QuestionEntry.COLUMN_DIFFICULTY;
+                    order = "DESC";
+                }
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
