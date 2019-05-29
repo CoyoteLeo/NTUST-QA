@@ -14,36 +14,55 @@ import edu.ntust.qa_ntust.data.QuestionContract;
 
 public class AddQuestionActivity extends AppCompatActivity {
     private int mDifficulty;
+    private String mAnswer;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_qestion);
 
-        ((RadioButton) findViewById(R.id.radButton1)).setChecked(true);
-        mDifficulty = 1;
+        ((RadioButton) findViewById(R.id.radioButtonAnswerA)).setChecked(true);
+        mAnswer = "A";
+
+        ((RadioButton) findViewById(R.id.radioButtonDifficultyHard)).setChecked(true);
+        mDifficulty = 3;
     }
 
-
-    /**
-     * onClickAddQuestion is called when the "ADD" button is clicked.
-     * It retrieves user input and inserts that new task data into the underlying database.
-     */
     public void onClickAddQuestion(View view) {
-        String input = ((EditText) findViewById(R.id.editTextQuestionContent)).getText().toString();
-        if (input.length() == 0) {
+        String content = ((EditText) findViewById(R.id.editTextQuestionContent)).getText().toString();
+        if (content.length() == 0) {
+            return;
+        }
+
+        String answer_A = ((EditText) findViewById(R.id.editTextChoiceA)).getText().toString();
+        if (answer_A.length() == 0) {
+            return;
+        }
+
+        String answer_B = ((EditText) findViewById(R.id.editTextChoiceB)).getText().toString();
+        if (answer_B.length() == 0) {
+            return;
+        }
+
+        String answer_C = ((EditText) findViewById(R.id.editTextChoiceC)).getText().toString();
+        if (answer_C.length() == 0) {
+            return;
+        }
+
+        String answer_D = ((EditText) findViewById(R.id.editTextChoiceD)).getText().toString();
+        if (answer_D.length() == 0) {
             return;
         }
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CONTENT, input);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_A, input);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_B, input);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_C, input);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_D, input);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_ANSWER, "A");
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CONTENT, content);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_A, answer_A);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_B, answer_B);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_C, answer_C);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_CHOICE_D, answer_D);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_ANSWER, mAnswer);
         contentValues.put(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY, mDifficulty);
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_COUNT, 5);
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_COUNT, 0);
         Uri uri = getContentResolver().insert(QuestionContract.QuestionEntry.CONTENT_URI, contentValues);
 
         if (uri != null) {
@@ -53,18 +72,25 @@ public class AddQuestionActivity extends AppCompatActivity {
         finish();
     }
 
-
-    /**
-     * onDifficultySelected is called whenever a priority button is clicked.
-     * It changes the value of mDifficulty based on the selected button.
-     */
     public void onDifficultySelected(View view) {
-        if (((RadioButton) findViewById(R.id.radButton1)).isChecked()) {
-            mDifficulty = 1;
-        } else if (((RadioButton) findViewById(R.id.radButton2)).isChecked()) {
-            mDifficulty = 2;
-        } else if (((RadioButton) findViewById(R.id.radButton3)).isChecked()) {
+        if (((RadioButton) findViewById(R.id.radioButtonDifficultyHard)).isChecked()) {
             mDifficulty = 3;
+        } else if (((RadioButton) findViewById(R.id.radioButtonDifficultyMedium)).isChecked()) {
+            mDifficulty = 2;
+        } else if (((RadioButton) findViewById(R.id.radioButtonDifficultyEasy)).isChecked()) {
+            mDifficulty = 1;
+        }
+    }
+
+    public void onAnswerSelected(View view) {
+        if (((RadioButton) findViewById(R.id.radioButtonAnswerA)).isChecked()) {
+            mAnswer = "A";
+        } else if (((RadioButton) findViewById(R.id.radioButtonAnswerB)).isChecked()) {
+            mAnswer = "B";
+        } else if (((RadioButton) findViewById(R.id.radioButtonAnswerC)).isChecked()) {
+            mAnswer = "C";
+        } else if (((RadioButton) findViewById(R.id.radioButtonAnswerD)).isChecked()) {
+            mAnswer = "D";
         }
     }
 }
