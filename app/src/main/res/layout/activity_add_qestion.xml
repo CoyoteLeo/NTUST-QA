@@ -1,134 +1,284 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     This vertical linear layout contains all the views in the AddQuestionActivity code.
     This includes an EditText to add a task description, and buttons to select a priority
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
     android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
 
-    <!-- EditText for getting task description input -->
-    <EditText
-        android:id="@+id/editTextQuestionContent"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:hint="@string/edit_question_content"
-        android:paddingBottom ="@dimen/activity_horizontal_margin"/>
+        android:layout_height="55dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    <!-- TextView and FrameLayout (which contains buttons) for Priority Selection -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:textColor="@android:color/primary_text_light"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/difficulty_string"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:id="@+id/textViewQuestionContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/question"
+            android:textSize="18sp" />
 
-    <FrameLayout
+        <EditText
+            android:id="@+id/editTextQuestionContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/edit_question_content"
+            android:inputType="textPersonName"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        android:layout_height="192dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <!-- Linear layout that contains all three priority buttons (high, medium, low)
-        in a single line -->
+        <TextView
+            android:id="@+id/textViewChoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/choice"
+            android:textSize="18sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:weightSum="3">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:textColor="@android:color/primary_text_light"
-                android:id="@+id/buttonP1"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/materialRed"
-                android:text="@string/high_difficulty"
                 android:layout_weight="1"
-                android:onClick="onDifficultySelected"/>
+                android:orientation="horizontal">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:textColor="@android:color/primary_text_light"
-                android:id="@+id/buttonP2"
+                <TextView
+                    android:id="@+id/textViewChoiceA"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/choice_A"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/editTextChoiceA"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/choice_A_content"
+                    android:inputType="textPersonName"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/materialOrange"
-                android:text="@string/med_difficulty"
                 android:layout_weight="1"
-                android:onClick="onDifficultySelected"/>
+                android:orientation="horizontal">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:textColor="@android:color/primary_text_light"
-                android:id="@+id/buttonP3"
+                <TextView
+                    android:id="@+id/textViewChoiceB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/choice_B"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/editTextChoiceB"
+                    android:layout_width="165dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/choice_B_content"
+                    android:inputType="textPersonName"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/materialYellow"
-                android:text="@string/low_difficulty"
                 android:layout_weight="1"
-                android:onClick="onDifficultySelected"/>
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/textViewChoiceC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/choice_C"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/editTextChoiceC"
+                    android:layout_width="168dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/choice_C_content"
+                    android:inputType="textPersonName"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewChoiceD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/choice_D"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/editTextChoiceD"
+                    android:layout_width="169dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/choice_D_content"
+                    android:inputType="textPersonName"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- RadioGroup for visible selection of a priority -->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewAnswer"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ans"
+            android:textSize="18sp" />
+
         <RadioGroup
+            android:id="@+id/radioGroupAnswer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:weightSum="3">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radButton1"
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonAnswerA"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
-                android:theme="@style/WhiteRadioButton"/>
+                android:onClick="onAnswerSelected"
+                android:text="@string/ans_A" />
 
             <RadioButton
-                android:id="@+id/radButton2"
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonAnswerB"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
-                android:theme="@style/WhiteRadioButton"/>
+                android:onClick="onAnswerSelected"
+                android:text="@string/ans_B" />
 
             <RadioButton
-                android:id="@+id/radButton3"
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonAnswerC"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onDifficultySelected"
                 android:layout_weight="1"
-                android:theme="@style/WhiteRadioButton"/>
+                android:onClick="onAnswerSelected"
+                android:text="@string/ans_C" />
+
+            <RadioButton
+                android:id="@+id/radioButtonAnswerD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onAnswerSelected"
+                android:text="@string/ans_D" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewDifficulty"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/difficulty"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupDifficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButtonDifficultyHard"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onDifficultySelected"
+                android:text="@string/difficulty_hard" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDifficultyMedium"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onDifficultySelected"
+                android:text="@string/difficulty_medium" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDifficultyEasy"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onDifficultySelected"
+                android:text="@string/difficulty_easy" />
 
         </RadioGroup>
 
-    </FrameLayout>
+    </LinearLayout>
 
-    <!-- Add button -->
     <Button
-        android:id="@+id/addButton"
+        android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/add_button"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/primary_text_dark"
-        android:background="@color/colorPrimary"
-        android:onClick="onClickAddQuestion"/>
+        android:layout_gravity="center|center_vertical"
+        android:layout_weight="1"
+        android:onClick="onClickAddQuestion"
+        android:text="Submit" />
 
 </LinearLayout>
