@@ -14,11 +14,55 @@
     <string name="med_difficulty">Medium</string>
     <string name="low_difficulty">Low</string>
 
-    <string name="add_button">Add</string>
+    <!--<string name="add_button">Add</string>-->
 
     <string name="action_settings">Settings</string>
 
     <string name="action_orders">Order</string>
     <string name="action_count_order">Count</string>
     <string name="action_difficulty_order">Difficulty</string>
+
+    <string name="add_task_activity_name">Add a New Question</string>
+
+    <!-- Strings for MainActivity -->
+    <string name="priority_1">1</string>
+    <string name="priority_2">2</string>
+    <string name="priority_3">3</string>
+
+    <!-- Strings for AddTaskActivity -->
+    <!-- This edit task has a unicode character for "..." = "&#8230;" -->
+    <string name="edit_task_description">Describe your task&#8230;</string>
+    <string name="priority_string">Priority</string>
+
+    <string name="high_priority">High</string>
+    <string name="med_priority">Medium</string>
+    <string name="low_priority">Low</string>
+
+    <string name="title_activity_creation">creation</string>
+    <string name="question">Question : </string>
+    <string name="ans">Answer : </string>
+    <string name="choice">Choices : </string>
+
+    <string name="difficulty">Difficulty : </string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_easy">Easy</string>
+
+    <string name="ans_A">A</string>
+    <string name="ans_B">B</string>
+    <string name="ans_C">C</string>
+    <string name="ans_D">D</string>
+
+    <string name="choice_A">A : </string>
+    <string name="choice_B">B : </string>
+    <string name="choice_C">C : </string>
+    <string name="choice_D">D : </string>
+
+    <string name="choice_A_content">Enter choice A here</string>
+    <string name="choice_B_content">Enter choice B here</string>
+    <string name="choice_C_content">Enter choice C here</string>
+    <string name="choice_D_content">Enter choice D here</string>
+
+    <string name="question_content">Enter question here</string>
+
 </resources>
