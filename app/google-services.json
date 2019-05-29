@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "735340428267",
+    "firebase_url": "https://ntust-qa.firebaseio.com",
+    "project_id": "ntust-qa",
+    "storage_bucket": "ntust-qa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735340428267:android:a0840813ab1323ca",
+        "android_client_info": {
+          "package_name": "edu.ntust.qa_ntust"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735340428267-vt3oghpkah9mguu3nagd5fj6qku9kr6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ntust.qa_ntust",
+            "certificate_hash": "52bd76eb697162573404820df15b4bf59334f374"
+          }
+        },
+        {
+          "client_id": "735340428267-mgippchf4n4ikmb7ron2jqam7dg1ffkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAwgaNnTTCHaCeQtIRptkIuD3VQhYh2Jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735340428267-mgippchf4n4ikmb7ron2jqam7dg1ffkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
