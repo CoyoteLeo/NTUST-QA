@@ -2,6 +2,7 @@ package edu.ntust.qa_ntust;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,9 +17,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
+import edu.ntust.qa_ntust.SwipeController;
+import edu.ntust.qa_ntust.SwipeControllerActions;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
+
+import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -28,11 +36,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private CustomCursorAdapter mAdapter;
     RecyclerView mRecyclerView;
+    private static final float buttonWidth = 300;
 
     private String order_column = QuestionContract.QuestionEntry.COLUMN_COUNT;
     private String order = "DESC";
 
+    enum ButtonsState {
+        GONE,
+        LEFT_VISIBLE,
+        RIGHT_VISIBLE
+    }
 
+    private boolean swipeBack = false;
+    private ButtonsState buttonShowedState = ButtonsState.GONE;
+    private RecyclerView.ViewHolder currentItemViewHolder = null;
+    SwipeController swipeController = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,28 +61,53 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+//                int id = (int) viewHolder.itemView.getTag();
+//
+//                String stringId = Integer.toString(id);
+//                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+//                uri = uri.buildUpon().appendPath(stringId).build();
+//
+//                getContentResolver().delete(uri, null, null);
+//
+//                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
+//
+//            }
+//
+//        }).attachToRecyclerView(mRecyclerView);
+
+        SwipeControllerActions haha = new SwipeControllerActions() {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
+            public void onRightClicked(int position) {
+                Toast.makeText(MainActivity.this,"左 ", Toast.LENGTH_SHORT).show();
             }
-
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int id = (int) viewHolder.itemView.getTag();
-
-                String stringId = Integer.toString(id);
-                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
-                uri = uri.buildUpon().appendPath(stringId).build();
-
-                getContentResolver().delete(uri, null, null);
-
-                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
-
+            public void onLeftClicked(int position) {
+                Toast.makeText(MainActivity.this,"右 ", Toast.LENGTH_SHORT).show();
             }
-        }).attachToRecyclerView(mRecyclerView);
+        };
+        swipeController = new SwipeController(haha);
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
 
         FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
+
+
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
