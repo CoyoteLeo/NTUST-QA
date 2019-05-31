@@ -251,6 +251,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
                 return true;
+            case R.id.login:
+                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(loginIntent);;
         }
         return super.onOptionsItemSelected(item);
     }
