@@ -22,9 +22,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import java.util.Objects;
 
 import static edu.ntust.qa_ntust.data.QuestionContract.QuestionEntry.TABLE_NAME;
 
@@ -65,20 +68,18 @@ public class QuestionContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         Uri returnUri;
 
-        switch (match) {
-            case QUESTIONS:
-                long id = db.insert(TABLE_NAME, null, values);
-                if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(QuestionContract.QuestionEntry.CONTENT_URI, id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        if (match == QUESTIONS) {
+            long id = db.insert(TABLE_NAME, null, values);
+            if (id > 0) {
+                returnUri = ContentUris.withAppendedId(QuestionContract.QuestionEntry.CONTENT_URI, id);
+            } else {
+                throw new SQLException("Failed to insert row into " + uri);
+            }
+        } else {
+            throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
         return returnUri;
     }
@@ -97,11 +98,15 @@ public class QuestionContentProvider extends ContentProvider {
                 retCursor = db.query(TABLE_NAME, projection, selection, selectionArgs, null,
                         null, sortOrder);
                 break;
+            case QUESTION_WITH_ID:
+                retCursor = db.query(TABLE_NAME, projection, selection, selectionArgs, null,
+                        null, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        retCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
         return retCursor;
     }
 
@@ -113,17 +118,15 @@ public class QuestionContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         int questionsDeleted; // starts as 0
 
-        switch (match) {
-            case QUESTION_WITH_ID:
-                String id = uri.getPathSegments().get(1);
-                questionsDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{id});
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        if (match == QUESTION_WITH_ID) {
+            String id = uri.getPathSegments().get(1);
+            questionsDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{id});
+        } else {
+            throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         if (questionsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
 
         return questionsDeleted;
@@ -136,17 +139,15 @@ public class QuestionContentProvider extends ContentProvider {
         final SQLiteDatabase db = mQuestionDbHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         int id;
-        switch (match) {
-            case QUESTIONS:
-                id = db.update(TABLE_NAME, values, selection, selectionArgs);
-                if (id <= 0) {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        if (match == QUESTIONS) {
+            id = db.update(TABLE_NAME, values, selection, selectionArgs);
+            if (id <= 0) {
+                throw new SQLException("Failed to insert row into " + uri);
+            }
+        } else {
+            throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         return id;
     }
 

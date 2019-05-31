@@ -1,10 +1,12 @@
 package edu.ntust.qa_ntust;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,10 +29,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import edu.ntust.qa_ntust.data.AudioInputReader;
+
+import java.lang.ref.WeakReference;
+import java.util.Objects;
+
 import edu.ntust.qa_ntust.data.QuestionContract;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int QUESTION_LOADER_ID = 0;
@@ -43,38 +48,73 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private AudioInputReader mAudioInputReader;
 
+    SwipeController swipeController = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewQuestions);
+        mRecyclerView = findViewById(R.id.recyclerViewQuestions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        SwipeControllerActions haha = new SwipeControllerActions() {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int id = (int) viewHolder.itemView.getTag();
-
-                String stringId = Integer.toString(id);
+            public void onRightClicked(int position) {
+                String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
 
                 getContentResolver().delete(uri, null, null);
-
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
 
             }
-        }).attachToRecyclerView(mRecyclerView);
 
-        FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
+
+            @Override
+            public void onLeftClicked(int position) {
+                String stringId = Integer.toString(position);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+                String[] projection = {
+                        "*"
+                };
+                String[] selectionArgs = {stringId};
+                String selection = "_id" + " = ?";
+                Cursor cursor = getContentResolver().query(uri, projection, selection, selectionArgs, null);
+                Objects.requireNonNull(cursor).moveToFirst();
+                Intent it = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("_id", cursor.getString(0));
+                bundle.putString("content", cursor.getString(1));
+                bundle.putString("choice_A", cursor.getString(2));
+                bundle.putString("choice_B", cursor.getString(3));
+                bundle.putString("choice_C", cursor.getString(4));
+                bundle.putString("choice_D", cursor.getString(5));
+                bundle.putString("answer", cursor.getString(6));
+                bundle.putString("count", cursor.getString(7));
+                bundle.putString("difficulty", cursor.getString(8));
+                cursor.close();
+                it.setClass(MainActivity.this, EditQuestionActivity.class);
+                it.putExtras(bundle);
+                startActivity(it);
+            }
+        };
+        swipeController = new SwipeController(haha);
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+
+        FloatingActionButton fabButton = findViewById(R.id.fab);
+
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * <p>
      * Implements the required callbacks to take care of loading data at all stages of loading.
      */
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
@@ -159,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param data   The data generated by the Loader.
      */
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
     }
 
@@ -172,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
 
@@ -214,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-
     /**
      * Below this point is code you do not need to modify; it deals with permissions
      * and starting/cleaning up the AudioInputReader
@@ -241,8 +282,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
         if (onOrOff) {
             mAudioInputReader.restart();
-        }
-        else {
+        } else {
             mAudioInputReader.shutdown(false);
         }
 
@@ -256,8 +296,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Boolean onOrOff = sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_play_music_default));
             if (onOrOff) {
                 mAudioInputReader.restart();
-            }
-            else {
+            } else {
                 mAudioInputReader.shutdown(false);
             }
         }
@@ -272,13 +311,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             // And if we're on SDK M or later...
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Ask again, nicely, for the permissions.
-                String[] permissionsWeNeed = new String[]{ Manifest.permission.RECORD_AUDIO };
+                String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
                 requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
             }
         } else {
             // Otherwise, permissions were granted and we are ready to go!
-            if(mAudioInputReader == null)
-            mAudioInputReader = new AudioInputReader(this);
+            if (mAudioInputReader == null)
+                mAudioInputReader = new AudioInputReader(this);
         }
     }
 
