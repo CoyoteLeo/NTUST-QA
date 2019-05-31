@@ -42,10 +42,10 @@ public class EditQuestionActivity extends AppCompatActivity {
         choice_B.setText(bundle.getString("choice_B"));
         choice_C.setText(bundle.getString("choice_C"));
         choice_D.setText(bundle.getString("choice_D"));
-        mDifficulty = Integer.parseInt(bundle.getString("difficulty", "1")) - 1;
+        mDifficulty = Integer.parseInt(bundle.getString("difficulty", "1"));
         mAnswer = bundle.getString("answer");
         ((RadioButton) answer.getChildAt(bundle.getString("answer", "A").charAt(0) - 'A')).setChecked(true);
-        ((RadioButton) difficulty.getChildAt(mDifficulty)).setChecked(true);
+        ((RadioButton) difficulty.getChildAt(3 - mDifficulty)).setChecked(true);
         id = bundle.getString("_id");
     }
 
