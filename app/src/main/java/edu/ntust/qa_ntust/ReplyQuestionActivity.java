@@ -2,50 +2,41 @@ package edu.ntust.qa_ntust;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import edu.ntust.qa_ntust.data.QuestionContract;
 
 public class ReplyQuestionActivity extends AppCompatActivity {
-    private Button submit;
-    private TextView question;
-    private TextView choice_A;
-    private TextView choice_B;
-    private TextView choice_C;
-    private TextView choice_D;
-    private RadioGroup answer;
-    private TextView difficulty;
-    private  String correct_ans;
+    private String correct_ans;
     private String mAnswer;
     private String id;
     private int count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply_qestion);
 
-        question = (TextView) findViewById(R.id.textViewQuestionContent);
-        choice_A = (TextView) findViewById(R.id.textViewChoiceA);
-        choice_B = (TextView) findViewById(R.id.textViewChoiceB);
-        choice_C = (TextView) findViewById(R.id.textViewChoiceC);
-        choice_D = (TextView) findViewById(R.id.textViewChoiceD);
-        answer = (RadioGroup)findViewById(R.id.radioGroupAnswer);
-        difficulty = (TextView)findViewById(R.id.textViewDifficulty) ;
-        submit = (Button)findViewById(R.id.buttonSubmit);
+        TextView question = findViewById(R.id.textViewQuestionContent);
+        TextView choice_A = findViewById(R.id.textViewChoiceA);
+        TextView choice_B = findViewById(R.id.textViewChoiceB);
+        TextView choice_C = findViewById(R.id.textViewChoiceC);
+        TextView choice_D = findViewById(R.id.textViewChoiceD);
+        TextView difficulty = findViewById(R.id.textViewDifficulty);
 
         Intent it = getIntent();
         Bundle bundle = it.getExtras();
-        question.setText(bundle.getString("content"));
+        question.setText(Objects.requireNonNull(bundle).getString("content"));
         choice_A.setText(bundle.getString("choice_A"));
         choice_B.setText(bundle.getString("choice_B"));
         choice_C.setText(bundle.getString("choice_C"));
@@ -53,8 +44,12 @@ public class ReplyQuestionActivity extends AppCompatActivity {
         difficulty.setText(bundle.getString("difficulty"));
         correct_ans = bundle.getString("answer");
         id = bundle.getString("_id");
-        count = new Integer(bundle.getString("count"));
+        count = Integer.valueOf(Objects.requireNonNull(bundle.getString("count")));
+
+        Button submit = findViewById(R.id.buttonSubmit);
+        submit.setText(R.string.submit_button_text);
     }
+
     public void onAnswerSelected(View view) {
 
         if (((RadioButton) findViewById(R.id.radioButtonAnswerA)).isChecked()) {
@@ -67,22 +62,21 @@ public class ReplyQuestionActivity extends AppCompatActivity {
             mAnswer = "D";
         }
     }
+
     public void onClickReplyQuestion(View view) {
 
-        if(mAnswer.equals(correct_ans)){
+        if (mAnswer.equals(correct_ans)) {
             Toast.makeText(getBaseContext(), "Correct", Toast.LENGTH_LONG).show();
-        } else{
+        } else {
             Toast.makeText(getBaseContext(), "Wrong", Toast.LENGTH_LONG).show();
         }
-
         ContentValues contentValues = new ContentValues();
+        contentValues.put(QuestionContract.QuestionEntry.COLUMN_COUNT, count + 1);
 
-        contentValues.put(QuestionContract.QuestionEntry.COLUMN_COUNT, count+1);
-
-        String[] selectionArgs = { id.toString() };
+        String[] selectionArgs = {id};
         String selection = "_id" + " = ?";
 
-        getContentResolver().update(QuestionContract.QuestionEntry.CONTENT_URI, contentValues,selection,selectionArgs);
+        getContentResolver().update(QuestionContract.QuestionEntry.CONTENT_URI, contentValues, selection, selectionArgs);
 
         finish();
     }

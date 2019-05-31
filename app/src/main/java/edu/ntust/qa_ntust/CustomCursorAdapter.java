@@ -6,13 +6,15 @@ import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.Objects;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
 
@@ -32,7 +34,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      *
      * @param mContext the current Context
      */
-    public CustomCursorAdapter(Context mContext) {
+    CustomCursorAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -42,8 +44,9 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      *
      * @return A new QuestionViewHolder that holds the view for each task
      */
+    @NonNull
     @Override
-    public QuestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QuestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.question_layout, parent, false);
         return new QuestionViewHolder(view);
     }
@@ -56,7 +59,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * @param position The position of the data in the Cursor
      */
     @Override
-    public void onBindViewHolder(QuestionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
 
         int idIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry._ID);
         int contentIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_CONTENT);
@@ -134,19 +137,17 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * When data changes and a re-query occurs, this function swaps the old Cursor
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
-    public Cursor swapCursor(Cursor c) {
+    void swapCursor(Cursor c) {
         if (mCursor == c) {
-            return null;
+            return;
         }
-        Cursor temp = mCursor;
         this.mCursor = c;
         if (c != null) {
             this.notifyDataSetChanged();
         }
-        return temp;
     }
 
-    class QuestionViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView questionContentView;
         TextView difficultyView;
@@ -157,44 +158,44 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
          *
          * @param itemView The view inflated in onCreateViewHolder
          */
-        public QuestionViewHolder(View itemView) {
+        QuestionViewHolder(View itemView) {
             super(itemView);
 
-            questionContentView = (TextView) itemView.findViewById(R.id.questionContent);
-            difficultyView = (TextView) itemView.findViewById(R.id.difficultyTextView);
-            orderView = (TextView) itemView.findViewById(R.id.questionCount);
+            questionContentView = itemView.findViewById(R.id.questionContent);
+            difficultyView = itemView.findViewById(R.id.difficultyTextView);
+            orderView = itemView.findViewById(R.id.questionCount);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
-        public void onClick(View view){
+        public void onClick(View view) {
 
             Intent it = new Intent();
             Bundle bundle = new Bundle();
-            it.setClass(view.getContext(),ReplyQuestionActivity.class);
-            String stringId = Integer.toString((int)view.getTag());
+            it.setClass(view.getContext(), ReplyQuestionActivity.class);
+            String stringId = Integer.toString((int) view.getTag());
             Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
             uri = uri.buildUpon().appendPath(stringId).build();
             String[] projection = {
                     "*"
             };
-            String[] selectionArgs = { stringId };
+            String[] selectionArgs = {stringId};
             String selection = "_id" + " = ?";
-            Cursor cursor =  mContext.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            cursor.moveToFirst();
-            int cnt = cursor.getCount();
-            bundle.putString("_id",  cursor.getString(0));
-            bundle.putString("content",  cursor.getString(1));
-            bundle.putString("choice_A",  cursor.getString(2));
-            bundle.putString("choice_B",  cursor.getString(3));
-            bundle.putString("choice_C",  cursor.getString(4));
-            bundle.putString("choice_D",  cursor.getString(5));
-            bundle.putString("answer",  cursor.getString(6));
-            bundle.putString("count",  cursor.getString(7));
-            bundle.putString("difficulty",  cursor.getString(8));
+            Cursor cursor = mContext.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            Objects.requireNonNull(cursor).moveToFirst();
+            bundle.putString("_id", cursor.getString(0));
+            bundle.putString("content", cursor.getString(1));
+            bundle.putString("choice_A", cursor.getString(2));
+            bundle.putString("choice_B", cursor.getString(3));
+            bundle.putString("choice_C", cursor.getString(4));
+            bundle.putString("choice_D", cursor.getString(5));
+            bundle.putString("answer", cursor.getString(6));
+            bundle.putString("count", cursor.getString(7));
+            bundle.putString("difficulty", cursor.getString(8));
 
             it.putExtras(bundle);
+            cursor.close();
             mContext.startActivity(it);
         }
     }
