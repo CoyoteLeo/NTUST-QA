@@ -23,12 +23,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".AddQuestionActivity"
+            android:name="edu.ntust.qa_ntust.AddQuestionActivity"
             android:label="@string/add_question_activity_name" />
+
         <activity
-            android:name=".SettingsActivity"
+            android:name="edu.ntust.qa_ntust.SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -37,9 +43,8 @@
         </activity>
 
         <provider
-            android:name=".data.QuestionContentProvider"
+            android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
             android:authorities="edu.ntust.qa_ntust"
             android:exported="false" />
     </application>
-
 </manifest>
