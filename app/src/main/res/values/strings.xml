@@ -65,4 +65,12 @@
 
     <string name="question_content">Enter question here</string>
 
+    <!-- Label for the play music checkbox preference -->
+    <string name="pref_play_music_label">Music</string>
+    <!-- Key name for playing music in SharedPreferences -->
+    <string name="pref_play_music_key" translatable="false">play_music</string>
+
+    <!-- Summary for Checkboxes -->
+    <string name="pref_play_true">On</string>
+    <string name="pref_play_false">Off</string>
 </resources>
