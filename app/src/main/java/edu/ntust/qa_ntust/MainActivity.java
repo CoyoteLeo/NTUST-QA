@@ -61,37 +61,53 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-
-//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-//                int id = (int) viewHolder.itemView.getTag();
-//
-//                String stringId = Integer.toString(id);
-//                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
-//                uri = uri.buildUpon().appendPath(stringId).build();
-//
-//                getContentResolver().delete(uri, null, null);
-//
-//                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
-//
-//            }
-//
-//        }).attachToRecyclerView(mRecyclerView);
-
         SwipeControllerActions haha = new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                Toast.makeText(MainActivity.this,"左 ", Toast.LENGTH_SHORT).show();
+                int id = position;
+                String stringId = Integer.toString(id);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+
+                getContentResolver().delete(uri, null, null);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
+//                mAdapter.notifyItemRemoved(position);
+//                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+
             }
+
+
             @Override
             public void onLeftClicked(int position) {
-                Toast.makeText(MainActivity.this,"右 ", Toast.LENGTH_SHORT).show();
+                int id = position;
+                String stringId = Integer.toString(id);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+                String[] projection = {
+                        "*"
+                };
+                String[] selectionArgs = { stringId };
+                String selection = "_id" + " = ?";
+                Cursor cursor =  getContentResolver().query(uri, projection, selection, selectionArgs, null);
+                cursor.moveToFirst();
+                int cnt = cursor.getCount();
+                Intent it = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("_id",  cursor.getString(0));
+                bundle.putString("content",  cursor.getString(1));
+                bundle.putString("choice_A",  cursor.getString(2));
+                bundle.putString("choice_B",  cursor.getString(3));
+                bundle.putString("choice_C",  cursor.getString(4));
+                bundle.putString("choice_D",  cursor.getString(5));
+                bundle.putString("answer",  cursor.getString(6));
+                bundle.putString("count",  cursor.getString(7));
+                bundle.putString("difficulty",  cursor.getString(8));
+
+                it.setClass(MainActivity.this,EditQuestionActivity.class);
+                it.putExtras(bundle);
+                startActivity(it);
+
+//                Toast.makeText(MainActivity.this,"右 ", Toast.LENGTH_SHORT).show();
             }
         };
         swipeController = new SwipeController(haha);

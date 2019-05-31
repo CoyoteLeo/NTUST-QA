@@ -97,6 +97,10 @@ public class QuestionContentProvider extends ContentProvider {
                 retCursor = db.query(TABLE_NAME, projection, selection, selectionArgs, null,
                         null, sortOrder);
                 break;
+            case QUESTION_WITH_ID:
+                retCursor = db.query(TABLE_NAME, projection, selection, selectionArgs, null,
+                        null, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

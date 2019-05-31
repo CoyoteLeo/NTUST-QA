@@ -130,10 +130,10 @@ public class SwipeController extends Callback{
 
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                            buttonsActions.onLeftClicked((int) viewHolder.itemView.getTag());
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
+                            buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
                         }
                     }
                     buttonShowedState = ButtonsState.GONE;

@@ -1,14 +1,18 @@
 package edu.ntust.qa_ntust;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
 
@@ -142,7 +146,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         return temp;
     }
 
-    class QuestionViewHolder extends RecyclerView.ViewHolder {
+    class QuestionViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
 
         TextView questionContentView;
         TextView difficultyView;
@@ -159,6 +163,39 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
             questionContentView = (TextView) itemView.findViewById(R.id.questionContent);
             difficultyView = (TextView) itemView.findViewById(R.id.difficultyTextView);
             orderView = (TextView) itemView.findViewById(R.id.questionCount);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view){
+
+            Intent it = new Intent();
+            Bundle bundle = new Bundle();
+            it.setClass(view.getContext(),ReplyQuestionActivity.class);
+            String stringId = Integer.toString((int)view.getTag());
+            Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(stringId).build();
+            String[] projection = {
+                    "*"
+            };
+            String[] selectionArgs = { stringId };
+            String selection = "_id" + " = ?";
+            Cursor cursor =  mContext.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            cursor.moveToFirst();
+            int cnt = cursor.getCount();
+            bundle.putString("_id",  cursor.getString(0));
+            bundle.putString("content",  cursor.getString(1));
+            bundle.putString("choice_A",  cursor.getString(2));
+            bundle.putString("choice_B",  cursor.getString(3));
+            bundle.putString("choice_C",  cursor.getString(4));
+            bundle.putString("choice_D",  cursor.getString(5));
+            bundle.putString("answer",  cursor.getString(6));
+            bundle.putString("count",  cursor.getString(7));
+            bundle.putString("difficulty",  cursor.getString(8));
+
+            it.putExtras(bundle);
+            mContext.startActivity(it);
         }
     }
 }
