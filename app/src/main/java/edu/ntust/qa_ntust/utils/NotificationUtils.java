@@ -26,13 +26,14 @@ public class NotificationUtils {
     /**
      * This pending intent id is used to uniquely reference the pending intent
      */
-    private static final int QA_REMINDER_PENDING_INTENT_ID = 3417;
+    public static final int QA_REMINDER_PENDING_INTENT_ID = 3417;
     /**
      * This notification channel id is used to link notifications to this channel
      */
     private static final String QA_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
-    private static final int ACTION_PENDING_INTENT_ID = 1;
+    private static final int ACTION_REPLY_PENDING_INTENT_ID = 1;
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
+    public static final int ACTION_SEND_NOTIFICATION_PENDING_INTENT_ID = 14;
 
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
@@ -84,10 +85,10 @@ public class NotificationUtils {
 
     private static NotificationCompat.Action ReplyAction(Context context) {
         Intent intent = new Intent(context, QAReminderIntentService.class);
-        intent.setAction(ReminderTasks.REPLY_QUESTION);
+        intent.setAction(ReminderTasks.ACTION_REPLY_QUESTION);
         PendingIntent pending_intent = PendingIntent.getService(
                 context,
-                ACTION_PENDING_INTENT_ID,
+                ACTION_REPLY_PENDING_INTENT_ID,
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action(R.drawable.ic_create_black_24dp, "I did it!", pending_intent);

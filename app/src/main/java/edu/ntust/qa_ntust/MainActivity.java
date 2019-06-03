@@ -2,6 +2,9 @@ package edu.ntust.qa_ntust;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -32,8 +35,8 @@ import edu.ntust.qa_ntust.data.AudioInputReader;
 import java.util.Objects;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
-
-import static edu.ntust.qa_ntust.utils.NotificationUtils.remindQA;
+import edu.ntust.qa_ntust.remind.AlarmReceiver;
+import edu.ntust.qa_ntust.remind.ReminderTasks;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
@@ -128,7 +131,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         setupPermissions();
         setupSharedPreferences();
-        remindQA(this);
+
+
+        // notification schedule
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.setAction(ReminderTasks.ACTION_SEND_NOTIFICATION);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 999, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, sender);
+
     }
 
 
@@ -254,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             case R.id.login:
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(loginIntent);;
+                startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -328,5 +339,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }
     }
+
 }
 

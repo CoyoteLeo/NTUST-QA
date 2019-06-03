@@ -15,8 +15,9 @@ import edu.ntust.qa_ntust.utils.NotificationUtils;
 
 public class ReminderTasks {
 
-    public static final String REPLY_QUESTION = "reply-QA";
+    public static final String ACTION_REPLY_QUESTION = "reply-QA";
     public static final String ACTION_DISMISS_NOTIFICATION = "dismiss-QA";
+    public static final String ACTION_SEND_NOTIFICATION = "issue-notification";
 
     public static Intent getRandomReplyIntent(Context context) {
         Intent intent = new Intent(context, ReplyQuestionActivity.class);
@@ -43,9 +44,15 @@ public class ReminderTasks {
         return intent;
     }
 
-    static void executeTask(Context context, String action) {
-        if (REPLY_QUESTION.equals(action))
+    public static void executeTask(Context context, String action) {
+        if (ACTION_SEND_NOTIFICATION.equals(action))
+            NotificationUtils.remindQA(context);
+        else if (ACTION_REPLY_QUESTION.equals(action)) {
             context.startActivity(getRandomReplyIntent(context));
-        NotificationUtils.clearAllNotifications(context);
+            NotificationUtils.clearAllNotifications(context);
+        } else if (ACTION_DISMISS_NOTIFICATION.equals(action)) {
+            NotificationUtils.clearAllNotifications(context);
+        }
+
     }
 }
