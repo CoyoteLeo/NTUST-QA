@@ -39,6 +39,10 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <service
+            android:name="edu.ntust.qa_ntust.remind.QAReminderIntentService"
+            android:exported="false"/>
+
         <provider
             android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
             android:authorities="edu.ntust.qa_ntust"

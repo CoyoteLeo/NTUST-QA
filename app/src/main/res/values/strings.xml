@@ -72,4 +72,8 @@
 
     <string name="login_activity_name">Login</string>
     <string name="login">LOGIN</string>
+
+    <string name="reminder_title">You leave a question to answer</string>
+    <string name="reminder_text">Answer to get point!</string>
+    <string name="main_notification_channel_name">QA-Notification-channel</string>
 </resources>

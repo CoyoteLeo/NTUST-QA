@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -30,10 +29,11 @@ import android.widget.Toast;
 
 import edu.ntust.qa_ntust.data.AudioInputReader;
 
-import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
+
+import static edu.ntust.qa_ntust.utils.NotificationUtils.remindQA;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         setupPermissions();
         setupSharedPreferences();
+        remindQA(this);
     }
 
 
@@ -260,11 +261,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     /**
-     * Below this point is code you do not need to modify; it deals with permissions
-     * and starting/cleaning up the AudioInputReader
-     **/
-
-    /**
      * onPause Cleanup audio stream
      **/
     @Override
@@ -282,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
+        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
         if (onOrOff) {
             mAudioInputReader.restart();
         } else {
@@ -296,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_play_music_key))) {
-            Boolean onOrOff = sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_play_music_default));
+            boolean onOrOff = sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_play_music_default));
             if (onOrOff) {
                 mAudioInputReader.restart();
             } else {
@@ -309,16 +305,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * App Permissions for Audio
      **/
     private void setupPermissions() {
-        // If we don't have the record audio permission...
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            // And if we're on SDK M or later...
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Ask again, nicely, for the permissions.
-                String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
-                requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
-            }
+            String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
+            requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
         } else {
-            // Otherwise, permissions were granted and we are ready to go!
             if (mAudioInputReader == null)
                 mAudioInputReader = new AudioInputReader(this);
         }
@@ -326,24 +316,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // The permission was granted! Start up the visualizer!
-                    mAudioInputReader = new AudioInputReader(this);
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mAudioInputReader = new AudioInputReader(this);
 
-                } else {
-                    Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
-                    finish();
-                    // The permission was denied, so we can show a message why we can't run the app
-                    // and then close the app.
-                }
+            } else {
+                Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
+                finish();
             }
-            // Other permissions could go down here
-
         }
     }
 }
