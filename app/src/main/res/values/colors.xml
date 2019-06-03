@@ -10,8 +10,8 @@
     <color name="materialOrange">#E67E22</color>
     <color name="materialYellow">#F1C40F</color>
 
-    <color name="count1">#FF0000</color>
-    <color name="count2">#FF5252</color>
-    <color name="count3">#FFB5B5</color>
+    <color name="count1">#00FF00</color>
+    <color name="count2">#52FF52</color>
+    <color name="count3">#B5FFB5</color>
     <color name="count4">#FFFFFF</color>
 </resources>

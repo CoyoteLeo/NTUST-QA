@@ -74,24 +74,22 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         int count = mCursor.getInt(countIndex);
 
         holder.itemView.setTag(id);
+
         holder.questionContentView.setText(content);
 
-        String difficultyString = "" + difficulty;
-        holder.difficultyView.setText(difficultyString);
+        holder.difficultyView.setText(getDifficultyText(difficulty));
+        holder.difficultyView.setTextColor(getDifficultyInfo(difficulty));
 
         String countString = "" + count;
         holder.orderView.setText(countString);
 
-        GradientDrawable difficultyCircle = (GradientDrawable) holder.difficultyView.getBackground();
-        int difficultyColor = getDifficultyColor(difficulty);
-        difficultyCircle.setColor(difficultyColor);
 
         GradientDrawable countCircle = (GradientDrawable) holder.orderView.getBackground();
         int countColor = getCountColor(count);
         countCircle.setColor(countColor);
     }
 
-    private int getDifficultyColor(int difficulty) {
+    private int getDifficultyInfo(int difficulty) {
         int difficultyColor = 0;
 
         switch (difficulty) {
@@ -104,10 +102,25 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
             case 3:
                 difficultyColor = ContextCompat.getColor(mContext, R.color.materialYellow);
                 break;
-            default:
-                break;
         }
         return difficultyColor;
+    }
+
+    private String getDifficultyText(int difficulty) {
+        String text = "Unlimited";
+
+        switch (difficulty) {
+            case 1:
+                text = "Easy";
+                break;
+            case 2:
+                text = "Medium";
+                break;
+            case 3:
+                text = "Hard";
+                break;
+        }
+        return text;
     }
 
     private int getCountColor(int count) {

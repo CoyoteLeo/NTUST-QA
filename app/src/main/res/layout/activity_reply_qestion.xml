@@ -13,172 +13,158 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin">
 
+    <TextView
+        android:id="@+id/textViewQuestionContentTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/question"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textViewQuestionContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textViewChoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_weight="1"
+        android:text="@string/choice"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textViewQuestionContentTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/question"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textViewQuestionContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textViewChoice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/choice"
-            android:textSize="18sp" />
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewChoiceATitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:minWidth="35dp"
+                android:text="@string/choice_A"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/textViewChoiceATitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/choice_A"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/textViewChoiceA"
-                    android:layout_width="164dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textViewChoiceA"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:ems="10"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/textViewChoiceBTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/choice_B"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/textViewChoiceB"
-                    android:layout_width="165dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewChoiceCTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/choice_C"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/textViewChoiceC"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewChoiceD"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/choice_D"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/textViewChoiceDTitle"
-                    android:layout_width="169dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/textViewChoiceBTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="35dp"
+                android:text="@string/choice_B"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewChoiceB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewChoiceCTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="35dp"
+                android:text="@string/choice_C"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewChoiceC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewChoiceDTitle"
+                android:layout_width="wrap_content"
+                android:minWidth="35dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/choice_D"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewChoiceD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:textSize="18sp" />
+
+        </LinearLayout>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textViewDifficultyTitle"
-            android:layout_width="320dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:minWidth="170dp"
             android:text="@string/difficulty"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textViewDifficulty"
-            android:layout_width="320dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="18sp" />
@@ -186,69 +172,62 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textViewAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_weight="1"
+        android:text="@string/ans"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textViewAnswer"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/ans"
-            android:textSize="18sp" />
-
-        <RadioGroup
-            android:id="@+id/radioGroupAnswer"
+        <RadioButton
+            android:id="@+id/radioButtonAnswerA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:onClick="onAnswerSelected"
+            android:text="@string/ans_A" />
 
-            <RadioButton
-                android:id="@+id/radioButtonAnswerA"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onAnswerSelected"
-                android:text="@string/ans_A" />
+        <RadioButton
+            android:id="@+id/radioButtonAnswerB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onAnswerSelected"
+            android:text="@string/ans_B" />
 
-            <RadioButton
-                android:id="@+id/radioButtonAnswerB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onAnswerSelected"
-                android:text="@string/ans_B" />
+        <RadioButton
+            android:id="@+id/radioButtonAnswerC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onAnswerSelected"
+            android:text="@string/ans_C" />
 
-            <RadioButton
-                android:id="@+id/radioButtonAnswerC"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onAnswerSelected"
-                android:text="@string/ans_C" />
-
-            <RadioButton
-                android:id="@+id/radioButtonAnswerD"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="onAnswerSelected"
-                android:text="@string/ans_D" />
-        </RadioGroup>
-
-    </LinearLayout>
-
+        <RadioButton
+            android:id="@+id/radioButtonAnswerD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onAnswerSelected"
+            android:text="@string/ans_D" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center|center_vertical"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_weight="1"
-        android:onClick="onClickReplyQuestion"/>
+        android:onClick="onClickReplyQuestion" />
 
 </LinearLayout>

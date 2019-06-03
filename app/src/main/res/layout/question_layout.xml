@@ -28,7 +28,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center"
-            android:background="@drawable/count_circle"
+            android:background="@drawable/difficulty_circle"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/primary_text_light" />
@@ -48,11 +48,10 @@
 
         <TextView
             android:id="@+id/difficultyTextView"
-            style="@style/TextAppearance.AppCompat.Small"
-            android:layout_width="22dp"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_gravity="center"
-            android:background="@drawable/difficulty_circle"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/primary_text_light" />
