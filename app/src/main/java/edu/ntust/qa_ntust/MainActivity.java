@@ -34,7 +34,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.ntust.qa_ntust.data.AudioInputReader;
 
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener,
         NavigationView.OnNavigationItemSelectedListener {
+
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int QUESTION_LOADER_ID = 0;
@@ -69,14 +74,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -102,7 +99,6 @@ public class MainActivity extends AppCompatActivity
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
 
             }
-
 
             @Override
             public void onLeftClicked(int position) {
@@ -167,6 +163,11 @@ public class MainActivity extends AppCompatActivity
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, sender);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUI(FirebaseAuth.getInstance().getCurrentUser());
+    }
 
     /**
      * This method is called after this activity has been paused or restarted.
@@ -180,7 +181,6 @@ public class MainActivity extends AppCompatActivity
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -240,7 +240,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     /**
      * Called when a previously created loader has finished its load.
      *
@@ -251,7 +250,6 @@ public class MainActivity extends AppCompatActivity
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
     }
-
 
     /**
      * Called when a previously created loader is being reset, and thus
@@ -298,9 +296,6 @@ public class MainActivity extends AppCompatActivity
                 }
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
                 return true;
-            case R.id.login:
-                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -312,16 +307,12 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_login) {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        } else if (id == R.id.nav_sign_out) {
+            FirebaseAuth.getInstance().signOut();
+            updateUI(null);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -397,5 +388,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void updateUI(FirebaseUser user) {
+        NavigationView navView = findViewById(R.id.nav_view);
+        TextView nameTextView = navView.getHeaderView(0).findViewById(R.id.user_name);
+        TextView emailTextView = navView.getHeaderView(0).findViewById(R.id.email);
+
+        if(user != null) {
+            nameTextView.setText(user.getUid());
+            emailTextView.setText(user.getEmail());
+            navView.getMenu().findItem(R.id.nav_login).setVisible(false);
+            navView.getMenu().findItem(R.id.nav_sign_out).setVisible(true);
+        } else {
+            nameTextView.setText(R.string.nav_header_title);
+            emailTextView.setText(R.string.nav_header_subtitle);
+            navView.getMenu().findItem(R.id.nav_login).setVisible(true);
+            navView.getMenu().findItem(R.id.nav_sign_out).setVisible(false);
+        }
+    }
 }
 
