@@ -8,6 +8,6 @@
         android:summaryOff="@string/pref_play_false"
         android:summaryOn="@string/pref_play_true"
         android:title="@string/pref_play_music_label"
-        android:checked="true"/>
+        />
 
 </PreferenceScreen>
