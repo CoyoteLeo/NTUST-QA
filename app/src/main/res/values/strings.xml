@@ -69,4 +69,7 @@
     <string name="create_button_text">Create</string>
     <string name="update_button_text">Update</string>
     <string name="submit_button_text">Submit</string>
+
+    <string name="login_activity_name">Login</string>
+    <string name="login">LOGIN</string>
 </resources>
