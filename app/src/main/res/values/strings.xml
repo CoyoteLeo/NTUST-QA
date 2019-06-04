@@ -76,4 +76,7 @@
     <string name="reminder_title">You leave a question to answer</string>
     <string name="reminder_text">Answer to get point!</string>
     <string name="main_notification_channel_name">QA-Notification-channel</string>
+
+    <string name="reminder_title2">You have no answer</string>
+    <string name="reminder_text2">Go to add a question</string>
 </resources>

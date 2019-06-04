@@ -45,9 +45,23 @@ public class ReminderTasks {
     }
 
     public static void executeTask(Context context, String action) {
-        if (ACTION_SEND_NOTIFICATION.equals(action))
-            NotificationUtils.remindQA(context);
-        else if (ACTION_REPLY_QUESTION.equals(action)) {
+        if (ACTION_SEND_NOTIFICATION.equals(action)) {
+            Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+            uri = uri.buildUpon().build();
+            String[] projection = {
+                    "*"
+            };
+            String[] selections = {};
+            Cursor cursor = context.getContentResolver().query(uri, projection, "", selections, "RANDOM() LIMIT 1");
+            Objects.requireNonNull(cursor).moveToFirst();
+            if (cursor.getCount() == 0) {
+                NotificationUtils.remindAdd(context);
+            } else {
+                NotificationUtils.remindQA(context);
+            }
+            cursor.close();
+
+        } else if (ACTION_REPLY_QUESTION.equals(action)) {
             context.startActivity(getRandomReplyIntent(context));
             NotificationUtils.clearAllNotifications(context);
         } else if (ACTION_DISMISS_NOTIFICATION.equals(action)) {

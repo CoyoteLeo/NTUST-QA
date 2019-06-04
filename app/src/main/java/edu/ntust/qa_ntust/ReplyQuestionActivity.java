@@ -33,6 +33,7 @@ public class ReplyQuestionActivity extends AppCompatActivity {
         TextView choice_D = findViewById(R.id.textViewChoiceD);
         TextView difficulty = findViewById(R.id.textViewDifficulty);
         ((RadioButton) findViewById(R.id.radioButtonAnswerA)).setChecked(true);
+        mAnswer = "A";
         Intent it = getIntent();
         Bundle bundle = it.getExtras();
         question.setText(Objects.requireNonNull(bundle).getString("content"));

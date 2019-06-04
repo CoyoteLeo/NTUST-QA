@@ -319,10 +319,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
             requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
-        } else {
-            if (mAudioInputReader == null)
-                mAudioInputReader = new AudioInputReader(this);
         }
+        if (mAudioInputReader == null)
+            mAudioInputReader = new AudioInputReader(this);
     }
 
     @Override
