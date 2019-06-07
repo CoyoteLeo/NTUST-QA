@@ -21,12 +21,15 @@
         <activity
             android:name="edu.ntust.qa_ntust.LoginActivity"
             android:label="@string/login_activity_name" />
-        <activity android:name="edu.ntust.qa_ntust.MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="edu.ntust.qa_ntust.AddQuestionActivity"
             android:label="@string/add_question_activity_name" />

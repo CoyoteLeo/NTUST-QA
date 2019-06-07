@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">QA-NTUST</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+
     <string name="main_activity_name">All Questions</string>
     <string name="add_question_activity_name">Add a New Question</string>
 
@@ -13,8 +22,6 @@
     <string name="high_difficulty">High</string>
     <string name="med_difficulty">Medium</string>
     <string name="low_difficulty">Low</string>
-
-    <string name="action_settings">Settings</string>
 
     <string name="action_orders">Order</string>
     <string name="action_count_order">Count</string>
@@ -72,6 +79,7 @@
 
     <string name="login_activity_name">Login</string>
     <string name="login">LOGIN</string>
+    <string name="sign_out">sign out</string>
 
     <string name="reminder_title">You leave a question to answer</string>
     <string name="reminder_text">Answer to get point!</string>

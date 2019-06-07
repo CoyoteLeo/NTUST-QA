@@ -14,21 +14,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.ntust.qa_ntust.data.AudioInputReader;
 
@@ -38,7 +48,11 @@ import edu.ntust.qa_ntust.data.QuestionContract;
 import edu.ntust.qa_ntust.remind.AlarmReceiver;
 import edu.ntust.qa_ntust.remind.ReminderTasks;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        NavigationView.OnNavigationItemSelectedListener {
+
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int QUESTION_LOADER_ID = 0;
@@ -58,6 +72,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+
         mRecyclerView = findViewById(R.id.recyclerViewQuestions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CustomCursorAdapter(this);
@@ -69,6 +94,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
+                getContentResolver().delete(uri, null, null);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
+
+            }
+
+            @Override
+            public void onLeftClicked(int position) {
+                String stringId = Integer.toString(position);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+
                 String[] projection = {
                         "*"
                 };
@@ -119,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         FloatingActionButton fabButton = findViewById(R.id.fab);
 
-
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,16 +168,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setupPermissions();
         setupSharedPreferences();
 
-
         // notification schedule
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.setAction(ReminderTasks.ACTION_SEND_NOTIFICATION);
         PendingIntent sender = PendingIntent.getBroadcast(this, 999, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, sender);
-
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUI(FirebaseAuth.getInstance().getCurrentUser());
+    }
 
     /**
      * This method is called after this activity has been paused or restarted.
@@ -157,6 +195,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     /**
      * Instantiates and returns a new AsyncTaskLoader with the given ID.
@@ -206,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-
     /**
      * Called when a previously created loader has finished its load.
      *
@@ -217,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
     }
-
 
     /**
      * Called when a previously created loader is being reset, and thus
@@ -264,13 +309,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
                 return true;
-            case R.id.login:
-                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+        } else if (id == R.id.nav_login) {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        } else if (id == R.id.nav_sign_out) {
+            FirebaseAuth.getInstance().signOut();
+            updateUI(null);
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     /**
      * onPause Cleanup audio stream
@@ -340,5 +401,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    private void updateUI(FirebaseUser user) {
+        NavigationView navView = findViewById(R.id.nav_view);
+        TextView nameTextView = navView.getHeaderView(0).findViewById(R.id.user_name);
+        TextView emailTextView = navView.getHeaderView(0).findViewById(R.id.email);
+
+        if(user != null) {
+            nameTextView.setText(user.getUid());
+            emailTextView.setText(user.getEmail());
+            navView.getMenu().findItem(R.id.nav_login).setVisible(false);
+            navView.getMenu().findItem(R.id.nav_sign_out).setVisible(true);
+        } else {
+            nameTextView.setText(R.string.nav_header_title);
+            emailTextView.setText(R.string.nav_header_subtitle);
+            navView.getMenu().findItem(R.id.nav_login).setVisible(true);
+            navView.getMenu().findItem(R.id.nav_sign_out).setVisible(false);
+        }
+    }
 }
 
