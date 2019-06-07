@@ -57,6 +57,7 @@ public class SwipeController extends Callback {
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
         if (swipeBack) {
+
             swipeBack = buttonShowedState != ButtonsState.GONE;
             return 0;
         }
@@ -90,7 +91,9 @@ public class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                    if (dX < -buttonWidth)
+//                        buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                        buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
                     else if (dX > buttonWidth) buttonShowedState = ButtonsState.LEFT_VISIBLE;
 
                     if (buttonShowedState != ButtonsState.GONE) {
@@ -174,10 +177,10 @@ public class SwipeController extends Callback {
             drawText("EDIT", c, leftButton, p);
 
         } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-//            c.drawRoundRect(rightButton, corners, corners, p);
-//            drawText("DELETE", c, rightButton, p);
-//            buttonInstance = rightButton;
-            buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
+            c.drawRoundRect(rightButton, corners, corners, p);
+            drawText("DELETE", c, rightButton, p);
+            buttonInstance = rightButton;
+//            buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
         }
     }
 
