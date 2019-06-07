@@ -94,9 +94,29 @@ public class MainActivity extends AppCompatActivity
                 String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
-                getContentResolver().delete(uri, null, null);
-                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
 
+                String[] projection = {
+                        "*"
+                };
+                String[] selectionArgs = {stringId};
+                String selection = "_id" + " = ?";
+                Cursor cursor = getContentResolver().query(uri, projection, selection, selectionArgs, null);
+                Objects.requireNonNull(cursor).moveToFirst();
+                Intent it = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("_id", cursor.getString(0));
+                bundle.putString("content", cursor.getString(1));
+                bundle.putString("choice_A", cursor.getString(2));
+                bundle.putString("choice_B", cursor.getString(3));
+                bundle.putString("choice_C", cursor.getString(4));
+                bundle.putString("choice_D", cursor.getString(5));
+                bundle.putString("answer", cursor.getString(6));
+                bundle.putString("count", cursor.getString(7));
+                bundle.putString("difficulty", cursor.getString(8));
+                cursor.close();
+                it.setClass(MainActivity.this, EditQuestionActivity.class);
+                it.putExtras(bundle);
+                startActivity(it);
             }
         };
         swipeController = new SwipeController(haha);

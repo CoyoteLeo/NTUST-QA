@@ -28,7 +28,6 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
     private Cursor mCursor;
     private Context mContext;
 
-
     /**
      * Constructor for the CustomCursorAdapter that initializes the Context.
      *
@@ -37,7 +36,6 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
     CustomCursorAdapter(Context mContext) {
         this.mContext = mContext;
     }
-
 
     /**
      * Called when ViewHolders are created to fill a RecyclerView.
@@ -50,7 +48,6 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         View view = LayoutInflater.from(mContext).inflate(R.layout.question_layout, parent, false);
         return new QuestionViewHolder(view);
     }
-
 
     /**
      * Called by the RecyclerView to display data at a specified position in the Cursor.
@@ -144,7 +141,6 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         }
         return mCursor.getCount();
     }
-
 
     /**
      * When data changes and a re-query occurs, this function swaps the old Cursor
