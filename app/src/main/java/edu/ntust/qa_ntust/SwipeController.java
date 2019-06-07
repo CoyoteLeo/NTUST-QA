@@ -1,6 +1,7 @@
 package edu.ntust.qa_ntust;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
 import android.graphics.Canvas;
@@ -10,7 +11,7 @@ import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
-
+import edu.ntust.qa_ntust.data.QuestionContract;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
@@ -67,8 +68,8 @@ public class SwipeController extends Callback {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
                 if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
-                    dX = Math.min(dX, -buttonWidth);
+//                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
+//                    dX = Math.min(dX, -buttonWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             } else {
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -173,9 +174,10 @@ public class SwipeController extends Callback {
             drawText("EDIT", c, leftButton, p);
 
         } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            c.drawRoundRect(rightButton, corners, corners, p);
-            drawText("DELETE", c, rightButton, p);
-            buttonInstance = rightButton;
+//            c.drawRoundRect(rightButton, corners, corners, p);
+//            drawText("DELETE", c, rightButton, p);
+//            buttonInstance = rightButton;
+            buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
         }
     }
 
