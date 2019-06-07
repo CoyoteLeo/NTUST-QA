@@ -118,6 +118,18 @@ public class MainActivity extends AppCompatActivity
                 it.putExtras(bundle);
                 startActivity(it);
             }
+
+            @Override
+            public void onLeftClicked(int position) {
+                String stringId = Integer.toString(position);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+
+                getContentResolver().delete(uri, null, null);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
+
+
+            }
         };
         swipeController = new SwipeController(haha);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);

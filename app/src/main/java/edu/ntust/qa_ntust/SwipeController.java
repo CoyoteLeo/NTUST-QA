@@ -87,8 +87,10 @@ public class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
-
+                    if (dX < -buttonWidth)
+                        buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                    else if (dX > buttonWidth)
+                        buttonsActions.onLeftClicked((int) viewHolder.itemView.getTag());
                     if (buttonShowedState != ButtonsState.GONE) {
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                         setItemsClickable(recyclerView, false);
