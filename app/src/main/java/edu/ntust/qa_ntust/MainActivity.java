@@ -69,18 +69,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
-
-                getContentResolver().delete(uri, null, null);
-                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
-
-            }
-
-
-            @Override
-            public void onLeftClicked(int position) {
-                String stringId = Integer.toString(position);
-                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
-                uri = uri.buildUpon().appendPath(stringId).build();
                 String[] projection = {
                         "*"
                 };
@@ -103,6 +91,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 it.setClass(MainActivity.this, EditQuestionActivity.class);
                 it.putExtras(bundle);
                 startActivity(it);
+            }
+
+
+            @Override
+            public void onLeftClicked(int position) {
+                String stringId = Integer.toString(position);
+                Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+
+                getContentResolver().delete(uri, null, null);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, MainActivity.this);
+
+
             }
         };
         swipeController = new SwipeController(haha);

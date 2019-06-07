@@ -69,8 +69,8 @@ public class SwipeController extends Callback {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
                 if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-//                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
-//                    dX = Math.min(dX, -buttonWidth);
+                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE)
+                    dX = Math.min(dX, -buttonWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             } else {
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -91,10 +91,10 @@ public class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX < -buttonWidth)
-//                        buttonShowedState = ButtonsState.RIGHT_VISIBLE;
-                        buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
-                    else if (dX > buttonWidth) buttonShowedState = ButtonsState.LEFT_VISIBLE;
+                    if (dX < -buttonWidth)buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                    else if (dX > buttonWidth)
+//                        buttonShowedState = ButtonsState.LEFT_VISIBLE;
+                        buttonsActions.onLeftClicked((int) viewHolder.itemView.getTag());
 
                     if (buttonShowedState != ButtonsState.GONE) {
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -174,13 +174,12 @@ public class SwipeController extends Callback {
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
             buttonInstance = leftButton;
             c.drawRoundRect(leftButton, corners, corners, p);
-            drawText("EDIT", c, leftButton, p);
+            drawText("DELETE", c, leftButton, p);
 
         } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             c.drawRoundRect(rightButton, corners, corners, p);
-            drawText("DELETE", c, rightButton, p);
+            drawText("EDIT", c, rightButton, p);
             buttonInstance = rightButton;
-//            buttonsActions.onRightClicked((int) viewHolder.itemView.getTag());
         }
     }
 
