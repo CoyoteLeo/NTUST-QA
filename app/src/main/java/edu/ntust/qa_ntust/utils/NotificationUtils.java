@@ -121,7 +121,7 @@ public class NotificationUtils {
                 ACTION_REPLY_PENDING_INTENT_ID,
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        return new NotificationCompat.Action(R.drawable.ic_create_black_24dp, "I did it!", pending_intent);
+        return new NotificationCompat.Action(R.drawable.ic_create_black_24dp, "Answer", pending_intent);
     }
 
     private static PendingIntent replyPendingIntent(Context context) {

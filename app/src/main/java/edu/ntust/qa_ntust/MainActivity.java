@@ -4,24 +4,19 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.widget.Toast;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -29,7 +24,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,26 +35,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import edu.ntust.qa_ntust.data.AudioInputReader;
-
 import java.util.Objects;
 
-import edu.ntust.qa_ntust.data.MusicService;
+import edu.ntust.qa_ntust.utils.MusicService;
 import edu.ntust.qa_ntust.data.QuestionContract;
 import edu.ntust.qa_ntust.remind.AlarmReceiver;
 import edu.ntust.qa_ntust.remind.ReminderTasks;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BasicActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
-        SharedPreferences.OnSharedPreferenceChangeListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int QUESTION_LOADER_ID = 0;
 
@@ -70,36 +59,7 @@ public class MainActivity extends AppCompatActivity
     private String order_column = QuestionContract.QuestionEntry.COLUMN_COUNT;
     private String order = "DESC";
 
-    //private AudioInputReader mAudioInputReader;
-    private boolean mIsBound = false;
-    private MusicService mServ = new MusicService();
-
-    private ServiceConnection Scon =new ServiceConnection(){
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder) binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon,Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
-    }
-        SwipeController swipeController = null;
+    SwipeController swipeController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,8 +149,6 @@ public class MainActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(QUESTION_LOADER_ID, null, this);
 
         doBindService();
-        setupPermissions();
-        setupSharedPreferences();
 
         // notification schedule
         Intent intent = new Intent(this, AlarmReceiver.class);
@@ -215,18 +173,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
-//        if (mAudioInputReader != null) {
-//            mAudioInputReader.restart();
-//        }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-        if (onOrOff) {
-            //mAudioInputReader.restart();
-            mServ.resumeMusic();
-        } else {
-            //mAudioInputReader.shutdown(false);
-            mServ.pauseMusic();
-        }
     }
 
     @Override
@@ -367,100 +313,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * onPause Cleanup audio stream
-     **/
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        if (mAudioInputReader != null) {
-//            mAudioInputReader.shutdown(false);
-//        }
-        mServ.pauseMusic();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        if (mAudioInputReader != null) {
-//            mAudioInputReader.shutdown(true);
-//        }
-        //mServ.stopMusic();
-        doUnbindService();
-        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    private void setupSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-        if (onOrOff) {
-            //mAudioInputReader.restart();
-            mServ.resumeMusic();
-        } else {
-            //mAudioInputReader.shutdown(false);
-            mServ.pauseMusic();
-        }
-
-        // Register the listener
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        if (key.equals(getString(R.string.pref_play_music_key))) {
-//            boolean onOrOff = sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_play_music_default));
-//            if (onOrOff) {
-//                mAudioInputReader.restart();
-//            } else {
-//                mAudioInputReader.shutdown(false);
-//            }
-//        }
-    }
-
-    /**
-     * App Permissions for Audio
-     **/
-    private void setupPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            // And if we're on SDK M or later...
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Ask again, nicely, for the permissions.
-                String[] permissionsWeNeed = new String[]{ Manifest.permission.RECORD_AUDIO };
-                requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
-            }
-        } else {
-            // Otherwise, permissions were granted and we are ready to go!
-            Intent music = new Intent();
-            music.setClass(this,MusicService.class);
-            startService(music);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //mAudioInputReader = new AudioInputReader(this);
-                Intent music = new Intent();
-                music.setClass(this,MusicService.class);
-                startService(music);
-            } else {
-                Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-    }
-
     private void updateUI(FirebaseUser user) {
         NavigationView navView = findViewById(R.id.nav_view);
         TextView nameTextView = navView.getHeaderView(0).findViewById(R.id.user_name);
         TextView emailTextView = navView.getHeaderView(0).findViewById(R.id.email);
 
-        if(user != null) {
+        if (user != null) {
             nameTextView.setText(user.getUid());
             emailTextView.setText(user.getEmail());
             navView.getMenu().findItem(R.id.nav_login).setVisible(false);

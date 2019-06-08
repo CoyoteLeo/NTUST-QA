@@ -1,4 +1,4 @@
-package edu.ntust.qa_ntust.data;
+package edu.ntust.qa_ntust.utils;
 
 import android.app.Service;
 import android.content.Intent;
@@ -56,7 +56,10 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mPlayer.start();
+        if ( !mPlayer.isPlaying()){
+            mPlayer.seekTo(length);
+            mPlayer.start();
+        }
         return START_STICKY;
     }
 
