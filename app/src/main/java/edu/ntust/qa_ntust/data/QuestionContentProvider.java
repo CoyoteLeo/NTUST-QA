@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package edu.ntust.qa_ntust.data;
 
 import android.content.ContentProvider;
@@ -32,10 +16,8 @@ import java.util.Objects;
 import static edu.ntust.qa_ntust.data.QuestionContract.QuestionEntry.TABLE_NAME;
 
 public class QuestionContentProvider extends ContentProvider {
-
     public static final int QUESTIONS = 100;
     public static final int QUESTION_WITH_ID = 101;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     /**
@@ -59,7 +41,6 @@ public class QuestionContentProvider extends ContentProvider {
         mQuestionDbHelper = new QuestionDbHelper(context);
         return true;
     }
-
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
@@ -109,7 +90,6 @@ public class QuestionContentProvider extends ContentProvider {
         retCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
         return retCursor;
     }
-
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {

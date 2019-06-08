@@ -19,17 +19,11 @@ enum ButtonsState {
 }
 
 public class SwipeController extends Callback {
-
     private boolean swipeBack = false;
-
     private ButtonsState buttonShowedState = ButtonsState.GONE;
-
     private RectF buttonInstance = null;
-
     private RecyclerView.ViewHolder currentItemViewHolder = null;
-
     private SwipeControllerActions buttonsActions;
-
     private static final float buttonWidth = 300;
 
     SwipeController(SwipeControllerActions buttonsActions) {
