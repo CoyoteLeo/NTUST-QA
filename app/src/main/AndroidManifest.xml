@@ -23,7 +23,8 @@
             android:label="@string/login_activity_name" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,6 +47,10 @@
         <service
             android:name="edu.ntust.qa_ntust.remind.QAReminderIntentService"
             android:exported="false" />
+
+        <service
+            android:name="edu.ntust.qa_ntust.data.MusicService"
+            android:enabled="true"/>
 
         <provider
             android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
