@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
 
-public class ReplyQuestionActivity extends AppCompatActivity {
+public class ReplyQuestionActivity extends BasicActivity {
     private String correct_ans;
     private String mAnswer;
     private String id;

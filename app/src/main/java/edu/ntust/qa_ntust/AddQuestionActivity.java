@@ -13,7 +13,7 @@ import android.widget.Toast;
 import edu.ntust.qa_ntust.data.QuestionContract;
 
 
-public class AddQuestionActivity extends AppCompatActivity {
+public class AddQuestionActivity extends BasicActivity {
     private int mDifficulty;
     private String mAnswer;
 

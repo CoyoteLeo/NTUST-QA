@@ -16,26 +16,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="edu.ntust.qa_ntust.ReplyQuestionActivity" />
-        <activity android:name="edu.ntust.qa_ntust.EditQuestionActivity" />
+        <activity android:name=".BasicActivity"></activity>
+        <activity android:name=".ReplyQuestionActivity" />
+        <activity android:name=".EditQuestionActivity" />
         <activity
-            android:name="edu.ntust.qa_ntust.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/login_activity_name" />
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="edu.ntust.qa_ntust.AddQuestionActivity"
+            android:name=".AddQuestionActivity"
             android:label="@string/add_question_activity_name" />
-
         <activity
-            android:name="edu.ntust.qa_ntust.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -44,16 +45,19 @@
         </activity>
 
         <service
-            android:name="edu.ntust.qa_ntust.remind.QAReminderIntentService"
+            android:name=".remind.QAReminderIntentService"
             android:exported="false" />
+        <service
+            android:name=".utils.MusicService"
+            android:enabled="true" />
 
         <provider
-            android:name="edu.ntust.qa_ntust.data.QuestionContentProvider"
+            android:name=".data.QuestionContentProvider"
             android:authorities="edu.ntust.qa_ntust"
             android:exported="false" />
 
         <receiver
-            android:name="edu.ntust.qa_ntust.remind.AlarmReceiver"
+            android:name=".remind.AlarmReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -61,4 +65,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

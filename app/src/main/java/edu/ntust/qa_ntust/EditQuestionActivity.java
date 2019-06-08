@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import edu.ntust.qa_ntust.data.QuestionContract;
 
-public class EditQuestionActivity extends AppCompatActivity {
+public class EditQuestionActivity extends BasicActivity {
     private int mDifficulty;
     private String mAnswer;
     private String id;
