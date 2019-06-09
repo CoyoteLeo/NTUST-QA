@@ -14,8 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import edu.ntust.qa_ntust.utils.HomeWatcher;
@@ -62,12 +60,8 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
             requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-            if (onOrOff) {
-                mServ.resumeMusic();
-            } else {
-                mServ.pauseMusic();
-            }
+            mServ.setmOn(sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default)));
+            mServ.serviceMusic();
         }
 
 
@@ -94,13 +88,7 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-        if (onOrOff) {
-            mServ.resumeMusic();
-        } else {
-            mServ.pauseMusic();
-        }
+        mServ.serviceMusic();
     }
 
     @Override
@@ -142,12 +130,8 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-        if (onOrOff) {
-            mServ.resumeMusic();
-        } else {
-            mServ.pauseMusic();
-        }
+        mServ.setmOn(sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default)));
+        mServ.serviceMusic();
     }
 
     @Override
@@ -155,9 +139,7 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
         if (requestCode == MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent music = new Intent();
-                music.setClass(this, MusicService.class);
-                startService(music);
+                mServ.serviceMusic();
             } else {
                 Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
                 finish();

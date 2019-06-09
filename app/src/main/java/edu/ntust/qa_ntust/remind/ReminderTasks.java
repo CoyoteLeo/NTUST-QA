@@ -44,7 +44,7 @@ public class ReminderTasks {
         return intent;
     }
 
-    public static void executeTask(Context context, String action) {
+    static void executeTask(Context context, String action) {
         if (ACTION_SEND_NOTIFICATION.equals(action)) {
             Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
             uri = uri.buildUpon().build();

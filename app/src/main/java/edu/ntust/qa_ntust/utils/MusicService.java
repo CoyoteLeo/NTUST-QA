@@ -2,10 +2,11 @@ package edu.ntust.qa_ntust.utils;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnErrorListener;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import edu.ntust.qa_ntust.R;
@@ -13,6 +14,12 @@ import edu.ntust.qa_ntust.R;
 public class MusicService extends Service implements MediaPlayer.OnErrorListener {
 
     private final IBinder mBinder = new ServiceBinder();
+
+    public void setmOn(Boolean mOn) {
+        this.mOn = mOn;
+    }
+
+    private Boolean mOn = false;
     MediaPlayer mPlayer;
     private int length = 0;
 
@@ -33,6 +40,8 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mOn = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
 
         mPlayer = MediaPlayer.create(this, R.raw.bensoundcute);
         mPlayer.setOnErrorListener(this);
@@ -40,6 +49,9 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         if (mPlayer != null) {
             mPlayer.setLooping(true);
             mPlayer.setVolume(100, 100);
+            if (mOn){
+                serviceMusic();
+            }
         }
     }
 
@@ -73,10 +85,14 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         }
     }
 
-    public void resumeMusic() {
-        if (mPlayer != null && !mPlayer.isPlaying()) {
-            mPlayer.seekTo(length);
-            mPlayer.start();
+    public void serviceMusic() {
+        if (mOn) {
+            if (mPlayer != null && !mPlayer.isPlaying()) {
+                mPlayer.seekTo(length);
+                mPlayer.start();
+            }
+        } else {
+            pauseMusic();
         }
     }
 

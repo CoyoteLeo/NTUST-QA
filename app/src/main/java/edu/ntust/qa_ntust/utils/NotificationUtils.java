@@ -27,14 +27,14 @@ public class NotificationUtils {
     /**
      * This pending intent id is used to uniquely reference the pending intent
      */
-    public static final int QA_REMINDER_PENDING_INTENT_ID = 3417;
+    private static final int QA_REMINDER_PENDING_INTENT_ID = 3417;
     /**
      * This notification channel id is used to link notifications to this channel
      */
     private static final String QA_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
     private static final int ACTION_REPLY_PENDING_INTENT_ID = 1;
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
-    public static final int ACTION_ADD_QUESTION_PENDING_INTENT_ID = 15;
+    private static final int ACTION_ADD_QUESTION_PENDING_INTENT_ID = 15;
 
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
