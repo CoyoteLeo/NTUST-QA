@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import edu.ntust.qa_ntust.R;
 
-public class MusicService extends Service  implements MediaPlayer.OnErrorListener {
+public class MusicService extends Service implements MediaPlayer.OnErrorListener {
 
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
@@ -41,47 +41,15 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
             mPlayer.setLooping(true);
             mPlayer.setVolume(100, 100);
         }
-
-
-        mPlayer.setOnErrorListener(new OnErrorListener() {
-
-            public boolean onError(MediaPlayer mp, int what, int
-                    extra) {
-
-                onError(mPlayer, what, extra);
-                return true;
-            }
-        });
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if ( !mPlayer.isPlaying()){
+        if (!mPlayer.isPlaying()) {
             mPlayer.seekTo(length);
             mPlayer.start();
         }
         return START_STICKY;
-    }
-
-    public void pauseMusic() {
-        if (mPlayer != null && mPlayer.isPlaying()) {
-            mPlayer.pause();
-            length = mPlayer.getCurrentPosition();
-
-        }
-    }
-
-    public void resumeMusic() {
-        if (mPlayer != null && mPlayer.isPlaying() == false) {
-            mPlayer.seekTo(length);
-            mPlayer.start();
-        }
-    }
-
-    public void stopMusic() {
-        mPlayer.stop();
-        mPlayer.release();
-        mPlayer = null;
     }
 
     @Override
@@ -96,6 +64,22 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
             }
         }
     }
+
+    public void pauseMusic() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.pause();
+            length = mPlayer.getCurrentPosition();
+
+        }
+    }
+
+    public void resumeMusic() {
+        if (mPlayer != null && !mPlayer.isPlaying()) {
+            mPlayer.seekTo(length);
+            mPlayer.start();
+        }
+    }
+
 
     public boolean onError(MediaPlayer mp, int what, int extra) {
 

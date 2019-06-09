@@ -96,7 +96,7 @@ public class QuestionContentProvider extends ContentProvider {
         final SQLiteDatabase db = mQuestionDbHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);
-        int questionsDeleted; // starts as 0
+        int questionsDeleted;
 
         if (match == QUESTION_WITH_ID) {
             String id = uri.getPathSegments().get(1);

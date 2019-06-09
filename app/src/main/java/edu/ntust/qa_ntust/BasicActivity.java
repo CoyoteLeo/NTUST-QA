@@ -61,18 +61,15 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
             String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
             requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
         } else {
-            Intent music = new Intent();
-            music.setClass(this, MusicService.class);
-            startService(music);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
+            if (onOrOff) {
+                mServ.resumeMusic();
+            } else {
+                mServ.pauseMusic();
+            }
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean onOrOff = sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default));
-        if (onOrOff) {
-            mServ.resumeMusic();
-        } else {
-            mServ.pauseMusic();
-        }
 
         //Start HomeWatcher
         mHomeWatcher = new HomeWatcher(this);

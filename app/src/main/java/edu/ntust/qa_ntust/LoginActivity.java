@@ -35,11 +35,9 @@ public class LoginActivity extends BasicActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                // Sign in succeeded
                 Intent goToMain = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(goToMain);
             } else {
-                // Sign in failed
                 Toast.makeText(this, "Sign In Failed", Toast.LENGTH_SHORT).show();
             }
         }

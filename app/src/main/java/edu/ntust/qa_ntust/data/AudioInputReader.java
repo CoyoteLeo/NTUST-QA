@@ -18,7 +18,6 @@ public class AudioInputReader {
     }
 
     private void initReader() {
-        // Setup media player
         if(mPlayer == null) {
             mPlayer = MediaPlayer.create(mContext, R.raw.bensoundcute);
             mPlayer.setLooping(true);
