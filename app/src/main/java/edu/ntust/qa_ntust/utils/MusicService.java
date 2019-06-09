@@ -1,11 +1,14 @@
 package edu.ntust.qa_ntust.utils;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -49,7 +52,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         if (mPlayer != null) {
             mPlayer.setLooping(true);
             mPlayer.setVolume(100, 100);
-            if (mOn){
+            if (mOn && ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 serviceMusic();
             }
         }
