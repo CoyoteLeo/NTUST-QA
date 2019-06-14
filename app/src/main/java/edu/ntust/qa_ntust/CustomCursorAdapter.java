@@ -56,13 +56,14 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * @param position The position of the data in the Cursor
      */
     @Override
-    public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {//整的recycle view的控制單元
 
         int idIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry._ID);
         int contentIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_CONTENT);
         int difficultyIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY);
         int countIndex = mCursor.getColumnIndex(QuestionContract.QuestionEntry.COLUMN_COUNT);
 
+        //滑動問題清單後，要更新游標(紀錄現在滑到哪個問題)
         mCursor.moveToPosition(position);
 
         final int id = mCursor.getInt(idIndex);
@@ -70,23 +71,28 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         int difficulty = mCursor.getInt(difficultyIndex);
         int count = mCursor.getInt(countIndex);
 
+        //把id貼到每個問題元件上當標籤
         holder.itemView.setTag(id);
 
+        //設定問題文字
         holder.questionContentView.setText(content);
 
+        //設定"問題難度"的文字、顏色
         holder.difficultyView.setText(getDifficultyText(difficulty));
         holder.difficultyView.setTextColor(getDifficultyInfo(difficulty));
 
+        //設定回答次數
         String countString = "" + count;
         holder.orderView.setText(countString);
 
 
+        //設定"回答次數"的顏色
         GradientDrawable countCircle = (GradientDrawable) holder.orderView.getBackground();
         int countColor = getCountColor(count);
         countCircle.setColor(countColor);
     }
 
-    private int getDifficultyInfo(int difficulty) {
+    private int getDifficultyInfo(int difficulty) {//將難度編號轉成顏色
         int difficultyColor = 0;
 
         switch (difficulty) {
@@ -103,7 +109,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         return difficultyColor;
     }
 
-    private String getDifficultyText(int difficulty) {
+    private String getDifficultyText(int difficulty) {//將難度編號換成文字
         String text = "Unlimited";
 
         switch (difficulty) {
@@ -120,7 +126,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         return text;
     }
 
-    private int getCountColor(int count) {
+    private int getCountColor(int count) {//將問回答次數轉成顏色
         if (count >= 20)
             return ContextCompat.getColor(mContext, R.color.count1);
         else if (count >= 10)
@@ -135,7 +141,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * Returns the number of items to display.
      */
     @Override
-    public int getItemCount() {
+    public int getItemCount() {//取出問題數量
         if (mCursor == null) {
             return 0;
         }
@@ -146,17 +152,17 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      * When data changes and a re-query occurs, this function swaps the old Cursor
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
-    void swapCursor(Cursor c) {
-        if (mCursor == c) {
+    void swapCursor(Cursor c) {//將buffer資料灌到現在再用的資料容器
+        if (mCursor == c) {//如果buffer資料跟現在的資料依樣，就啥都不做
             return;
         }
-        this.mCursor = c;
-        if (c != null) {
-            this.notifyDataSetChanged();
+        this.mCursor = c;//如果buffer資料跟現在的資料不依樣，舊更新現在的資料
+        if (c != null) {//如果資料更新成功
+            this.notifyDataSetChanged();//通知作業系統，資料有更新，要reload
         }
     }
 
-    class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class QuestionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {//問題清單中，問題元件的控制單元
 
         TextView questionContentView;
         TextView difficultyView;
@@ -167,7 +173,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
          *
          * @param itemView The view inflated in onCreateViewHolder
          */
-        QuestionViewHolder(View itemView) {
+        QuestionViewHolder(View itemView) {//問題元件的建構子
             super(itemView);
 
             questionContentView = itemView.findViewById(R.id.questionContent);
@@ -178,11 +184,13 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(View view) {    //點選問題清單中的問題後，顯示回答問題的頁面
 
             Intent it = new Intent();
             Bundle bundle = new Bundle();
-            it.setClass(view.getContext(), ReplyQuestionActivity.class);
+            it.setClass(view.getContext(), ReplyQuestionActivity.class);//顯示回答問題的頁面
+
+            //從資料庫撈資料
             String stringId = Integer.toString((int) view.getTag());
             Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
             uri = uri.buildUpon().appendPath(stringId).build();
@@ -203,7 +211,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
             bundle.putString("count", cursor.getString(7));
             bundle.putString("difficulty", cursor.getString(8));
 
-            it.putExtras(bundle);
+            it.putExtras(bundle);//把撈到的資料灌到頁面中
             cursor.close();
             mContext.startActivity(it);
         }

@@ -55,19 +55,19 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
         doBindService();
         setupSharedPreferences();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {//如果沒有權限
             String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
-            requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
+            requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);//要求權限
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             mServ.setmOn(sharedPreferences.getBoolean("play_music", getResources().getBoolean(R.bool.pref_play_music_default)));
-            mServ.serviceMusic();
+            mServ.serviceMusic();//播音樂
         }
 
 
         //Start HomeWatcher
         mHomeWatcher = new HomeWatcher(this);
-        mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
+        mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {//按下home鍵時要暫停音樂
             @Override
             public void onHomePressed() {
                 if (mServ != null) {
@@ -86,7 +86,7 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() {//從暫停被喚醒時要播音樂
         super.onResume();
         mServ.serviceMusic();
     }
@@ -142,7 +142,7 @@ public abstract class BasicActivity extends AppCompatActivity implements SharedP
                 mServ.serviceMusic();
             } else {
                 Toast.makeText(this, "Permission for audio not granted. Visualizer can't run.", Toast.LENGTH_LONG).show();
-                finish();
+                finish();//結束該activity
             }
         }
     }

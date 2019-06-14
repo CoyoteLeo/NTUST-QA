@@ -59,25 +59,30 @@ public class MainActivity extends BasicActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //tool bar、action bar都是用於設置介面的選單，tool bar的功能較廣
+        // 用toolbar做為APP的ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        // 側滑選單
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);     //抓整個layout元件
+        NavigationView navigationView = findViewById(R.id.nav_view);    // 抓側拉選單元件
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(   // 將drawerLayout和toolbar整合，會出現「三」按鈕,透過點選"三"以收放測拉選單
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        // 設置主葉面問題清單的recycle view
         mRecyclerView = findViewById(R.id.recyclerViewQuestions);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CustomCursorAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
+        //設置滑動recycle view元件時要執行的動作
         SwipeControllerActions haha = new SwipeControllerActions() {
             @Override
-            public void onRightClicked(int position) {
+            public void onRightClicked(int position) {  //點極左滑按鈕時執行的動作(編輯問題)
                 String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
@@ -107,7 +112,7 @@ public class MainActivity extends BasicActivity
             }
 
             @Override
-            public void onLeftClicked(int position) {
+            public void onLeftClicked(int position) {//點極右滑按鈕時執行的動作(刪除問題)
                 String stringId = Integer.toString(position);
                 Uri uri = QuestionContract.QuestionEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
@@ -118,10 +123,13 @@ public class MainActivity extends BasicActivity
 
             }
         };
+
+        //設置滑動管理原
         swipeController = new SwipeController(haha);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
+        //滑動後顯示按鈕(Edit、Delete)
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -129,13 +137,13 @@ public class MainActivity extends BasicActivity
             }
         });
 
+        // 設置點擊浮動按鈕後觸發的事件
         FloatingActionButton fabButton = findViewById(R.id.fab);
-
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addQuestionIntent = new Intent(MainActivity.this, AddQuestionActivity.class);
-                startActivity(addQuestionIntent);
+                startActivity(addQuestionIntent);   //呼叫新增問題的葉面
             }
         });
 
@@ -145,16 +153,17 @@ public class MainActivity extends BasicActivity
 
         // notification schedule
         Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.setAction(ReminderTasks.ACTION_SEND_NOTIFICATION);
-        PendingIntent sender = PendingIntent.getBroadcast(this, 999, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, sender);
+        intent.setAction(ReminderTasks.ACTION_SEND_NOTIFICATION);//設置狀態，型態是string
+        PendingIntent sender = PendingIntent.getBroadcast(this, 999, intent, PendingIntent.FLAG_UPDATE_CURRENT);//获得PendingIntent
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);//向作業系統請求服務
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, sender);//設置servise重複執行的時間間隔(milisecond)
     }
 
+    //設置主頁面被喚醒時，要執行的事件
     @Override
     protected void onStart() {
         super.onStart();
-        updateUI(FirebaseAuth.getInstance().getCurrentUser());
+        updateUI(FirebaseAuth.getInstance().getCurrentUser());  //更新UI
     }
 
     /**
@@ -163,16 +172,16 @@ public class MainActivity extends BasicActivity
      * so this restarts the loader to re-query the underlying data for any changes.
      */
     @Override
-    protected void onResume() {
+    protected void onResume() { //從pause狀態被喚醒時執行的動作
         super.onResume();
-        getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
+        getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);    //reload問題清單
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {   //當手機案"返回按鈕"時所執行的動作
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+            drawer.closeDrawer(GravityCompat.START);//關閉測拉選單
         } else {
             super.onBackPressed();
         }
@@ -189,7 +198,7 @@ public class MainActivity extends BasicActivity
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
-        return new AsyncTaskLoader<Cursor>(this) {
+        return new AsyncTaskLoader<Cursor>(this) {  //啟用在後台執行的非同步線程
 
             Cursor mQuestionData = null;
 
@@ -233,7 +242,7 @@ public class MainActivity extends BasicActivity
      * @param data   The data generated by the Loader.
      */
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {//當loader仔入完資料後，要將buffer的資料，灌到現在再用的資料容器
         mAdapter.swapCursor(data);
     }
 
@@ -249,71 +258,75 @@ public class MainActivity extends BasicActivity
         mAdapter.swapCursor(null);
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {//創建右上角的menu選單
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {   //點選Menu時呼叫
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
+            case R.id.action_settings:  //顯示設定頁面
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
                 return true;
-            case R.id.action_count_order:
+            case R.id.action_count_order:   //調整排序方法,改變order_column、order這兩個參數，在restartLoader的時候用這兩個參數做排序
                 if (order_column.equals(QuestionContract.QuestionEntry.COLUMN_COUNT))
                     order = order.equals("DESC") ? "ASC" : "DESC";
                 else {
                     order_column = QuestionContract.QuestionEntry.COLUMN_COUNT;
                     order = "DESC";
                 }
-                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);//重新排序後要reload
                 return true;
-            case R.id.action_difficulty_order:
+            case R.id.action_difficulty_order:   //調整排序方法,改變order_column、order這兩個參數，在restartLoader的時候用這兩個參數做排序
                 if (order_column.equals(QuestionContract.QuestionEntry.COLUMN_DIFFICULTY))
                     order = order.equals("DESC") ? "ASC" : "DESC";
                 else {
                     order_column = QuestionContract.QuestionEntry.COLUMN_DIFFICULTY;
                     order = "DESC";
                 }
-                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);
+                getSupportLoaderManager().restartLoader(QUESTION_LOADER_ID, null, this);    //重新排序後要reload
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {   //點擊"三"所執行的動作
         int id = item.getItemId();
 
-        if (id == R.id.nav_login) {
+        if (id == R.id.nav_login) {//點選登入按鈕，顯示登入頁面
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);
-        } else if (id == R.id.nav_sign_out) {
-            FirebaseAuth.getInstance().signOut();
-            updateUI(null);
+        } else if (id == R.id.nav_sign_out) {//點選登出按鈕
+            FirebaseAuth.getInstance().signOut();//將firebase登出
+            updateUI(null);//更新UI
         }
 
+        //關閉測拉選單
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     private void updateUI(FirebaseUser user) {
         NavigationView navView = findViewById(R.id.nav_view);
         TextView nameTextView = navView.getHeaderView(0).findViewById(R.id.user_name);
         TextView emailTextView = navView.getHeaderView(0).findViewById(R.id.email);
 
-        if (user != null) {
+        if (user != null) {//如果現在是登入狀態
             nameTextView.setText(user.getUid());
             emailTextView.setText(user.getEmail());
             navView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navView.getMenu().findItem(R.id.nav_sign_out).setVisible(true);
-        } else {
+        } else {//如果是登出狀態
             nameTextView.setText(R.string.nav_header_title);
             emailTextView.setText(R.string.nav_header_subtitle);
             navView.getMenu().findItem(R.id.nav_login).setVisible(true);

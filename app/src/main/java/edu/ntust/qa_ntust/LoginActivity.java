@@ -20,11 +20,12 @@ public class LoginActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            signIn();
-        } else {
+        if (user == null) {//如果現在是登出狀態
+            signIn();//執行登入的function
+
+        } else {//現在是登入狀態
             Intent goToMain = new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(goToMain);
+            startActivity(goToMain);//回到主畫面
         }
     }
 
@@ -32,11 +33,11 @@ public class LoginActivity extends BasicActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == RC_SIGN_IN) {//如果送出的要求是"登入要求"
+            if (resultCode == RESULT_OK) {  //登入成功
                 Intent goToMain = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(goToMain);
-            } else {
+            } else {//登入失敗
                 Toast.makeText(this, "Sign In Failed", Toast.LENGTH_SHORT).show();
             }
         }

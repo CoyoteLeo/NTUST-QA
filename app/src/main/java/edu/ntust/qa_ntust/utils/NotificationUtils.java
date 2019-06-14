@@ -36,13 +36,13 @@ public class NotificationUtils {
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
     private static final int ACTION_ADD_QUESTION_PENDING_INTENT_ID = 15;
 
-    public static void clearAllNotifications(Context context) {
+    public static void clearAllNotifications(Context context) { //清空所有的notification
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }
 
-    public static void remindQA(Context context) {
+    public static void remindQA(Context context) {  //提醒用戶回答問題
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -62,9 +62,9 @@ public class NotificationUtils {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(
                         context.getString(R.string.reminder_text)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentIntent(replyPendingIntent(context))
-                .addAction(ReplyAction(context))
-                .addAction(ignoreReminderAction(context))
+                .setContentIntent(replyPendingIntent(context))  //點選notification後執行的
+                .addAction(ReplyAction(context))    //點選按鈕後執行ㄉ
+                .addAction(ignoreReminderAction(context))//點選按鈕後執行ㄉ
                 .setAutoCancel(true);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -73,7 +73,7 @@ public class NotificationUtils {
         notificationManager.notify(QA_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
     }
 
-    public static void remindAdd(Context context) {
+    public static void remindAdd(Context context) {     //提醒用戶新增問題
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -124,7 +124,7 @@ public class NotificationUtils {
         return new NotificationCompat.Action(R.drawable.ic_create_black_24dp, "Answer", pending_intent);
     }
 
-    private static PendingIntent replyPendingIntent(Context context) {
+    private static PendingIntent replyPendingIntent(Context context) {  //可以點選的notification選項
         Intent intent = ReminderTasks.getRandomReplyIntent(context);
         return PendingIntent.getActivity(
                 context,
@@ -133,7 +133,7 @@ public class NotificationUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private static PendingIntent addQuestionPendingIntent(Context context) {
+    private static PendingIntent addQuestionPendingIntent(Context context) {    //可以點選的notification選項
         Intent intent = new Intent(context, AddQuestionActivity.class);
         return PendingIntent.getActivity(
                 context,
@@ -143,7 +143,7 @@ public class NotificationUtils {
     }
 
 
-    private static Bitmap largeIcon(Context context) {
+    private static Bitmap largeIcon(Context context) {  //抓icon
         Resources res = context.getResources();
         return BitmapFactory.decodeResource(res, R.drawable.ic_create_black_24dp);
     }
